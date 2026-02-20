@@ -1,0 +1,25 @@
+---
+interface Props {
+  label: string;
+  tone?: "accent" | "fg" | "muted";
+}
+
+const { label, tone = "accent" } = Astro.props as Props;
+const chars = label.toUpperCase().split("");
+
+const toneClass =
+  tone === "fg" ? "text-fg" : tone === "muted" ? "text-muted" : "text-accent";
+---
+
+<div class="flex flex-wrap gap-1">
+  {
+    chars.map((char) => (
+      <div class="flap relative grid h-10 w-8 place-items-center overflow-hidden">
+        <div class="flap-hinge absolute inset-x-1 top-1/2 -translate-y-1/2"></div>
+        <span class={`relative z-10 text-lg ${toneClass}`}>
+          {char === " " ? "\u00A0" : char}
+        </span>
+      </div>
+    ))
+  }
+</div>

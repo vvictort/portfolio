@@ -1,0 +1,16 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+}
+
+const { title, subtitle } = Astro.props as Props;
+---
+
+<section class="card p-5 shadow-soft">
+  <header class="mb-4 flex items-end justify-between gap-4">
+    <h2 class="board-title text-xs">{title}</h2>
+    {subtitle && <p class="text-xs text-muted">{subtitle}</p>}
+  </header>
+  <slot />
+</section>

@@ -1,0 +1,31 @@
+/* Import fonts */
+@import "tailwindcss";
+@import "@fontsource/share-tech-mono";
+@import "@fontsource/inter";
+@import "./flightboard.css";
+
+@theme {
+  --color-brand: var(--color-blue-600);
+}
+
+@layer base {
+  html {
+    font-family: "Inter", system-ui, sans-serif;
+    background-color: black;
+    color: white;
+  }
+
+  /* Monospace font for the flight board */
+  .font-mono {
+    font-family: "Share Tech Mono", monospace;
+  }
+}
+
+/* Custom scrollbar hiding utility if needed globally */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
