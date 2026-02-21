@@ -53,15 +53,15 @@ export function AboutSection() {
           <div className="absolute right-0 top-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
           {/* Pass Top row: YVR ...DEV */}
-          <div className="flex items-center justify-between mb-8 relative z-10">
-            <div className="flex flex-col">
-              <span className="text-6xl font-mono font-bold tracking-wider text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]">
+          <div className="flex flex-col md:flex-row items-center justify-between mb-8 relative z-10 gap-8 md:gap-0">
+            <div className="flex flex-col text-center md:text-left">
+              <span className="text-5xl md:text-6xl font-mono font-bold tracking-wider text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]">
                 YVR
               </span>
               <span className="text-zinc-500 font-mono text-xs mt-2 uppercase tracking-widest">Origin</span>
             </div>
 
-            <div className="flex-1 mx-12 flex items-center relative gap-4">
+            <div className="flex-1 w-full md:w-auto md:mx-12 flex items-center relative gap-4">
               <div className="flex-1 h-px bg-zinc-700/50 relative overflow-hidden">
                 <motion.div
                   className="absolute inset-y-0 left-0 bg-primary/50 w-1/2 blur-[1px]"
@@ -84,17 +84,17 @@ export function AboutSection() {
               </div>
             </div>
 
-            <div className="flex flex-col items-end pr-8 border-r border-white/10">
-              <span className="text-6xl font-mono font-bold tracking-wider text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]">
+            <div className="flex flex-col text-center md:text-right md:pr-8 md:border-r border-white/10">
+              <span className="text-5xl md:text-6xl font-mono font-bold tracking-wider text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]">
                 DEV
               </span>
               <span className="text-zinc-500 font-mono text-xs mt-2 uppercase tracking-widest">Destination</span>
             </div>
 
-            <div className="flex flex-col items-center justify-center pl-8 relative">
+            <div className="flex flex-col items-center justify-center md:pl-8 relative">
               <span className="text-zinc-500 font-mono text-xs uppercase mb-2 tracking-widest">Gate</span>
               <div className="px-4 py-2 bg-primary/10 border border-primary/20 rounded-lg">
-                <span className="text-primary text-4xl font-mono font-bold [text-shadow:0_0_12px_rgba(250,204,21,0.4)]">
+                <span className="text-primary text-3xl md:text-4xl font-mono font-bold [text-shadow:0_0_12px_rgba(250,204,21,0.4)]">
                   A1
                 </span>
               </div>
@@ -108,20 +108,20 @@ export function AboutSection() {
           </div>
 
           {/* Pass Bottom info */}
-          <div className="grid grid-cols-4 gap-8 relative z-10 bg-black/40 p-6 rounded-2xl border border-white/5">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 relative z-10 bg-black/40 p-6 rounded-2xl border border-white/5">
             <div className="flex flex-col gap-1.5">
               <span className="text-zinc-500 font-mono text-[10px] tracking-widest uppercase">Passenger</span>
               <span className="font-mono text-sm text-white font-bold tracking-wider">THAI, VICTOR</span>
             </div>
-            <div className="flex flex-col gap-1.5 border-l border-white/5 pl-8">
+            <div className="flex flex-col gap-1.5 border-none md:border-solid md:border-l border-white/5 md:pl-8">
               <span className="text-zinc-500 font-mono text-[10px] tracking-widest uppercase">Date</span>
               <span className="font-mono text-sm text-white font-bold tracking-wider">2024-PRESENT</span>
             </div>
-            <div className="flex flex-col gap-1.5 border-l border-white/5 pl-8">
+            <div className="flex flex-col gap-1.5 border-none md:border-solid md:border-l border-white/5 md:pl-8 mt-4 md:mt-0">
               <span className="text-zinc-500 font-mono text-[10px] tracking-widest uppercase">Flight</span>
               <span className="font-mono text-sm text-white font-bold tracking-wider">VT2026</span>
             </div>
-            <div className="flex flex-col gap-1.5 border-l border-white/5 pl-8">
+            <div className="flex flex-col gap-1.5 border-none md:border-solid md:border-l border-white/5 md:pl-8 mt-4 md:mt-0">
               <span className="text-zinc-500 font-mono text-[10px] tracking-widest uppercase">Seat</span>
               <span className="font-mono text-sm text-white font-bold tracking-wider">3A</span>
             </div>
@@ -129,7 +129,7 @@ export function AboutSection() {
         </motion.div>
 
         {/* Info Cards */}
-        <motion.div variants={itemVars} className="grid grid-cols-3 gap-4">
+        <motion.div variants={itemVars} className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
             { icon: MapPin, label: "Location", value: "Vancouver, BC" },
             { icon: GraduationCap, label: "Education", value: "CS @ UBC" },

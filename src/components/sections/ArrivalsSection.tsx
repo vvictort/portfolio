@@ -56,7 +56,7 @@ export function ArrivalsSection() {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-100px" }}
-        className="grid grid-cols-3 gap-6 mt-16">
+        className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
         {contacts.map((contact, i) => (
           <motion.a
             variants={itemVars}
@@ -81,7 +81,7 @@ export function ArrivalsSection() {
         ))}
       </motion.div>
 
-      <div className="mt-auto pt-20 pb-8 flex items-center justify-between border-t border-white/5 text-zinc-600 font-mono text-[10px] uppercase tracking-widest px-4">
+      <div className="mt-auto pt-20 pb-8 flex flex-col md:flex-row items-center justify-between border-t border-white/5 text-zinc-600 font-mono text-[10px] uppercase tracking-widest px-4 gap-4 text-center md:text-left">
         <div className="flex items-center gap-2">
           <Plane className="w-4 h-4" /> VICTOR THAI
         </div>

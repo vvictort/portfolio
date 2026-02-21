@@ -49,7 +49,7 @@ export function JourneySection() {
         className="flex flex-col">
         <span className="text-zinc-500 font-mono text-sm tracking-widest uppercase mb-6">IN-FLIGHT EQUIPMENT</span>
 
-        <div className="grid grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
           {Object.entries(skills).map(([category, items]) => (
             <div key={category} className="flex flex-col gap-4">
               <span className="text-primary font-mono text-xs font-bold tracking-widest">{category}</span>

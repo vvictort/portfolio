@@ -32,7 +32,7 @@ export function BeyondCodeSection() {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-100px" }}
-        className="grid grid-cols-4 gap-6 w-full">
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
         {[
           { icon: Mountain, label: "Outdoors", desc: "Hiking the local trails" },
           { icon: Camera, label: "Photography", desc: "Capturing moments" },

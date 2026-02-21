@@ -144,27 +144,29 @@ export const FlightBoard: React.FC = () => {
         </h1>
       </div>
 
-      {/* Single grid: labels + data rows share column sizing */}
-      <div className="fb-grid">
-        {/* Column labels as first row */}
-        <span className="fb-label">Time</span>
-        <span className="fb-label">Flight</span>
-        <span className="fb-label">IATA</span>
-        <span className="fb-label">To</span>
-        <span className="fb-label">Gate</span>
-        <span className="fb-label">Remarks</span>
+      {/* Scrollable container for mobile */}
+      <div className="w-full overflow-x-auto pb-4 scrollbar-hide">
+        <div className="fb-grid min-w-max pr-8">
+          {/* Column labels as first row */}
+          <span className="fb-label">Time</span>
+          <span className="fb-label">Flight</span>
+          <span className="fb-label">IATA</span>
+          <span className="fb-label">To</span>
+          <span className="fb-label">Gate</span>
+          <span className="fb-label">Remarks</span>
 
-        {/* Data rows: each FlapField is a grid cell */}
-        {data.map((f, i) => (
-          <React.Fragment key={i}>
-            <FlapField value={f.time} width={5} scramble={flip} delay={i * 80} />
-            <FlapField value={f.flight} width={6} scramble={flip} delay={i * 80 + 25} />
-            <FlapField value={f.iata} width={3} color="#facc15" scramble={flip} delay={i * 80 + 50} />
-            <FlapField value={f.destination} width={13} scramble={flip} delay={i * 80 + 75} />
-            <FlapField value={f.gate} width={3} scramble={flip} delay={i * 80 + 100} />
-            <FlapField value={f.remarks} width={8} color={remColor(f.remarks)} scramble={flip} delay={i * 80 + 125} />
-          </React.Fragment>
-        ))}
+          {/* Data rows: each FlapField is a grid cell */}
+          {data.map((f, i) => (
+            <React.Fragment key={i}>
+              <FlapField value={f.time} width={5} scramble={flip} delay={i * 80} />
+              <FlapField value={f.flight} width={6} scramble={flip} delay={i * 80 + 25} />
+              <FlapField value={f.iata} width={3} color="#facc15" scramble={flip} delay={i * 80 + 50} />
+              <FlapField value={f.destination} width={13} scramble={flip} delay={i * 80 + 75} />
+              <FlapField value={f.gate} width={3} scramble={flip} delay={i * 80 + 100} />
+              <FlapField value={f.remarks} width={8} color={remColor(f.remarks)} scramble={flip} delay={i * 80 + 125} />
+            </React.Fragment>
+          ))}
+        </div>
       </div>
     </div>
   );

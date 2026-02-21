@@ -38,11 +38,11 @@ export function DestinationsSection({ projects }: Props) {
         transition={{ duration: 0.6 }}
         className="flex flex-col gap-2 relative">
         <span className="text-primary font-mono text-sm font-bold tracking-widest">GATE C3 //</span>
-        <div className="flex items-center justify-between">
-          <h2 className="text-5xl font-bold tracking-tight text-white mb-4">Destinations</h2>
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-0 mb-4 md:mb-0">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white">Destinations</h2>
           <a
             href="#"
-            className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors font-mono text-xs uppercase tracking-widest">
+            className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors font-mono text-xs uppercase tracking-widest mt-2 md:mt-0">
             ALL FLIGHTS <ExternalLink className="w-4 h-4" />
           </a>
         </div>
@@ -54,7 +54,7 @@ export function DestinationsSection({ projects }: Props) {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-100px" }}
-        className="grid grid-cols-2 gap-6 mt-8">
+        className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
         {projects.map((proj, i) => (
           <motion.div
             variants={itemVars}
