@@ -2,70 +2,23 @@ import React from "react";
 import { Plane, Github, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 
-const projects = [
-  {
-    code: "PIF",
-    context: "nwHacks 2026",
-    gate: "C1",
-    status: "LANDED",
-    title: "PlayItForward",
-    description:
-      "A gamified community platform built at nwHacks 2026. Encourages acts of kindness through interactive challenges and social features.",
-    tags: ["React", "TypeScript", "Node.js"],
-  },
-  {
-    code: "CCO",
-    context: "Hackathon Project",
-    gate: "C2",
-    status: "LANDED",
-    title: "Carbon Compass",
-    description:
-      "Environmental tracking tool that helps users understand and reduce their carbon footprint through data visualization and actionable insights.",
-    tags: ["JavaScript", "API", "Data Viz"],
-  },
-  {
-    code: "HSA",
-    context: "UBC Bolt 2025",
-    gate: "C3",
-    status: "LANDED",
-    title: "Hotel Sentiment Analysis",
-    description:
-      "UBC Bolt 2025 project analyzing resort hotel reviews with NLP techniques. Predicts sentiment and extracts key themes from guest feedback.",
-    tags: ["Python", "scikit-learn", "NLP"],
-  },
-  {
-    code: "PLA",
-    context: "UBC DSCI",
-    gate: "C4",
-    status: "LANDED",
-    title: "PLAICraft Analysis",
-    description:
-      "Statistical analysis of player engagement patterns across age groups in Minecraft, using R for data wrangling and visualization.",
-    tags: ["R", "Statistics", "ggplot2"],
-  },
-  {
-    code: "AIC",
-    context: "TELUS Tech 2026",
-    gate: "C5",
-    status: "LANDED",
-    title: "AI Innovation Challenge",
-    description:
-      "A platform providing challenges and leaderboards for developers creating innovative AI solutions during the TELUS 2026 event.",
-    tags: ["Next.js", "PostgreSQL"],
-  },
-  {
-    code: "CDD",
-    context: "ML Project",
-    gate: "C6",
-    status: "LANDED",
-    title: "Credit Default Detection",
-    description:
-      "An exploratory data analysis and ML classification project aimed at predicting credit card defaults from user metrics.",
-    tags: ["Python", "Pandas", "XGBoost"],
-  },
-];
+export interface Project {
+  code: string;
+  context: string;
+  gate: string;
+  status: string;
+  title: string;
+  description: string;
+  tags: string[];
+  github?: string;
+  live?: string;
+}
 
-export function DestinationsSection() {
+interface Props {
+  projects: Project[];
+}
+
+export function DestinationsSection({ projects }: Props) {
   const containerVars = {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { staggerChildren: 0.15 } },
@@ -106,45 +59,84 @@ export function DestinationsSection() {
           <motion.div
             variants={itemVars}
             key={i}
-            className="bg-[#0a0a0a] hover:bg-[#111] transition-colors border border-white/5 rounded-2xl p-8 flex flex-col group relative">
-            <div className="flex items-center justify-between mb-8">
+            className="group relative bg-[#050505]/80 backdrop-blur-xl border border-white/10 rounded-3xl hover:border-primary/30 transition-all duration-500 hover:shadow-[0_0_30px_rgba(250,204,21,0.1)] flex flex-col overflow-hidden h-full">
+            {/* Background Decor */}
+            <div
+              className="absolute inset-0 opacity-10 pointer-events-none"
+              style={{
+                backgroundImage: "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)",
+                backgroundSize: "32px 32px",
+              }}
+            />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none translate-x-1/3 -translate-y-1/3" />
+            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+            {/* Tech Header */}
+            <div className="w-full px-8 py-4 border-b border-white/10 bg-white/5 flex items-center justify-between relative overflow-hidden z-10">
               <div className="flex items-center gap-3">
-                <span className="text-primary font-mono font-bold tracking-widest">{proj.code}</span>
-                <span className="text-zinc-600 font-mono text-[10px] uppercase tracking-widest">{proj.context}</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-zinc-600 font-mono text-[10px] uppercase tracking-widest">GATE {proj.gate}</span>
-                <span className="text-green-500 font-mono text-[10px] uppercase tracking-widest font-bold [text-shadow:0_0_8px_rgba(34,197,94,0.6)]">
-                  {proj.status}
+                <span className="font-mono text-xs tracking-widest text-white font-bold uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
+                  SEC: {proj.code}
                 </span>
               </div>
+              <span className="font-mono text-[10px] tracking-widest text-zinc-500 uppercase border border-white/10 px-2 py-0.5 rounded-sm bg-black/40">
+                SYS.DEF
+              </span>
             </div>
 
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-2xl font-mono uppercase tracking-wider font-bold text-white group-hover:text-primary transition-colors">
+            {/* Project Details */}
+            <div className="p-8 relative z-10 flex flex-col flex-1">
+              <div className="flex items-center justify-between mb-8">
+                <span className="text-primary font-mono text-xs font-bold tracking-widest uppercase bg-primary/10 px-3 py-1 rounded-sm border border-primary/20">
+                  GATE {proj.gate}
+                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest border-b border-zinc-500/30 pb-0.5">
+                    {proj.context}
+                  </span>
+                </div>
+              </div>
+
+              <h3 className="text-2xl font-mono uppercase tracking-wider text-white font-bold mb-4 group-hover:text-primary transition-colors duration-300">
                 {proj.title}
               </h3>
-              <Plane className="w-5 h-5 text-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </div>
+              <p className="text-zinc-400 text-sm leading-relaxed mb-8 flex-1">{proj.description}</p>
 
-            <p className="text-zinc-400 text-sm leading-relaxed mb-6 flex-1">{proj.description}</p>
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded-md border border-white/5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-green-500 font-mono text-[10px] uppercase tracking-widest font-bold [text-shadow:0_0_8px_rgba(34,197,94,0.6)]">
+                    {proj.status}
+                  </span>
+                </div>
+              </div>
 
-            <div className="flex flex-wrap gap-2 mb-8">
-              {proj.tags.map((tag, j) => (
-                <span
-                  key={j}
-                  className="px-3 py-1 rounded font-mono text-[10px] font-bold tracking-widest text-primary bg-primary/10 border border-primary/30 shadow-[0_0_8px_rgba(250,204,21,0.4)] transition-all">
-                  {tag}
-                </span>
-              ))}
-            </div>
+              <div className="flex flex-wrap gap-2 mb-8">
+                {proj.tags.map((tag, j) => (
+                  <span
+                    key={j}
+                    className="px-3 py-1 rounded font-mono text-[10px] font-bold tracking-widest text-primary bg-primary/10 border border-primary/30 shadow-[0_0_8px_rgba(250,204,21,0.4)] transition-all">
+                    {tag}
+                  </span>
+                ))}
+              </div>
 
-            <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between">
-              <a
-                href="#"
-                className="flex items-center gap-2 text-zinc-600 hover:text-white transition-colors font-mono text-[10px] uppercase tracking-widest">
-                <Github className="w-4 h-4" /> SOURCE
-              </a>
+              {/* Actions */}
+              <div className="flex items-center gap-4 pt-6 border-t border-white/10 mt-auto">
+                <a
+                  href={proj.github}
+                  className="flex-1 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg py-3 text-sm font-mono tracking-widest transition-colors duration-300">
+                  <Github className="w-4 h-4" />
+                  <span>REPO</span>
+                </a>
+                {proj.live && (
+                  <a
+                    href={proj.live}
+                    className="flex-1 flex items-center justify-center gap-2 bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary rounded-lg py-3 text-sm font-mono tracking-widest font-bold transition-colors duration-300 shadow-[0_0_12px_rgba(250,204,21,0.2)]">
+                    <ExternalLink className="w-4 h-4" />
+                    <span>LIVE</span>
+                  </a>
+                )}
+              </div>
             </div>
           </motion.div>
         ))}

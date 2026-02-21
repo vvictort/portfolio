@@ -1,14 +1,17 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
-import { FlightBoard } from '../components/FlightBoard';
-import { Navigation } from '../components/Navigation';
+import { FlightBoard } from '../components/ui/FlightBoard';
+import { Navigation } from '../components/layout/Navigation';
 import { AboutSection } from '../components/sections/AboutSection';
 import { JourneySection } from '../components/sections/JourneySection';
 import { DestinationsSection } from '../components/sections/DestinationsSection';
 import { BeyondCodeSection } from '../components/sections/BeyondCodeSection';
 import { ArrivalsSection } from '../components/sections/ArrivalsSection';
-import { SmoothScroll } from '../components/SmoothScroll';
-import { BackgroundCosmetics } from '../components/BackgroundCosmetics';
+import { SmoothScroll } from '../components/layout/SmoothScroll';
+import { BackgroundCosmetics } from '../components/ui/BackgroundCosmetics';
+import { HeroStars } from '../components/ui/HeroStars';
+
+import projects from '../data/projects.json';
 ---
 
 <MainLayout title="Victor Thai | Portfolio">
@@ -19,6 +22,7 @@ import { BackgroundCosmetics } from '../components/BackgroundCosmetics';
 		<main class="w-full bg-airport-grid relative z-10">
 			{/* Departures Section */}
 			<section id="departures" class="min-h-screen w-full relative flex text-white flex-col items-center justify-center overflow-hidden">
+			<HeroStars client:load />
 			<div class="w-full max-w-6xl mx-auto px-8 relative z-10">
                 <FlightBoard client:idle />
             </div>
@@ -41,7 +45,7 @@ import { BackgroundCosmetics } from '../components/BackgroundCosmetics';
 
         {/* C3: Destinations Section */}
 		<section id="destinations" class="min-h-screen w-full relative flex items-center justify-center py-20">
-			<DestinationsSection client:visible />
+			<DestinationsSection client:visible projects={projects} />
 		</section>
 
         {/* D4: Beyond Code Section */}

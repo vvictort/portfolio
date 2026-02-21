@@ -108,12 +108,32 @@ export const FlightBoard: React.FC = () => {
   const [flip, setFlip] = useState(false);
 
   useEffect(() => {
-    const t = setTimeout(() => {
+    let showingWelcome = false;
+
+    // Initial jump to welcome text after 4s
+    const initialTimeout = setTimeout(() => {
       setFlip(true);
       setData(WELCOME);
+      showingWelcome = true;
       setTimeout(() => setFlip(false), 1500);
     }, 4000);
-    return () => clearTimeout(t);
+
+    // Then continuously loop every 8 seconds
+    const interval = setInterval(() => {
+      setFlip(true);
+      if (showingWelcome) {
+        setData(INITIAL_FLIGHTS);
+      } else {
+        setData(WELCOME);
+      }
+      showingWelcome = !showingWelcome;
+      setTimeout(() => setFlip(false), 1500);
+    }, 8000);
+
+    return () => {
+      clearTimeout(initialTimeout);
+      clearInterval(interval);
+    };
   }, []);
 
   return (

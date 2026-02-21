@@ -1,0 +1,64 @@
+[
+  {
+    "code": "PIF",
+    "context": "nwHacks 2026",
+    "gate": "C1",
+    "status": "LANDED",
+    "title": "PlayItForward",
+    "description": "A gamified community platform built at nwHacks 2026. Encourages acts of kindness through interactive challenges and social features.",
+    "tags": ["React", "TypeScript", "Node.js"],
+    "github": "#",
+    "live": "#"
+  },
+  {
+    "code": "CCO",
+    "context": "Hackathon Project",
+    "gate": "C2",
+    "status": "LANDED",
+    "title": "Carbon Compass",
+    "description": "Environmental tracking tool that helps users understand and reduce their carbon footprint through data visualization and actionable insights.",
+    "tags": ["JavaScript", "API", "Data Viz"],
+    "github": "#"
+  },
+  {
+    "code": "HSA",
+    "context": "UBC Bolt 2025",
+    "gate": "C3",
+    "status": "LANDED",
+    "title": "Hotel Sentiment Analysis",
+    "description": "UBC Bolt 2025 project analyzing resort hotel reviews with NLP techniques. Predicts sentiment and extracts key themes from guest feedback.",
+    "tags": ["Python", "scikit-learn", "NLP"],
+    "github": "#"
+  },
+  {
+    "code": "PLA",
+    "context": "UBC DSCI",
+    "gate": "C4",
+    "status": "LANDED",
+    "title": "PLAICraft Analysis",
+    "description": "Statistical analysis of player engagement patterns across age groups in Minecraft, using R for data wrangling and visualization.",
+    "tags": ["R", "Statistics", "ggplot2"],
+    "github": "#"
+  },
+  {
+    "code": "AIC",
+    "context": "TELUS Tech 2026",
+    "gate": "C5",
+    "status": "LANDED",
+    "title": "AI Innovation Challenge",
+    "description": "A platform providing challenges and leaderboards for developers creating innovative AI solutions during the TELUS 2026 event.",
+    "tags": ["Next.js", "PostgreSQL"],
+    "github": "#",
+    "live": "#"
+  },
+  {
+    "code": "CDD",
+    "context": "ML Project",
+    "gate": "C6",
+    "status": "LANDED",
+    "title": "Credit Default Detection",
+    "description": "An exploratory data analysis and ML classification project aimed at predicting credit card defaults from user metrics.",
+    "tags": ["Python", "Pandas", "XGBoost"],
+    "github": "#"
+  }
+]

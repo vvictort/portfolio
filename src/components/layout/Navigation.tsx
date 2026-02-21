@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Plane } from "lucide-react";
-import { cn } from "../utils";
+import { cn } from "../../utils";
 import { motion } from "framer-motion";
 
 const navLinks = [
@@ -40,9 +40,19 @@ export function Navigation() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="flex items-center gap-2 text-primary pointer-events-auto">
-          <Plane className="w-6 h-6 rotate-45" />
-          <span className="font-mono font-bold text-xl tracking-wider">VT</span>
+          className="flex items-center gap-3 text-primary pointer-events-auto relative group cursor-pointer">
+          <div className="relative flex items-center justify-center w-10 h-10">
+            {/* Spinning Radar Ring */}
+            <motion.div
+              className="absolute inset-0 rounded-full border border-primary/30 border-t-primary shadow-[0_0_10px_rgba(250,204,21,0.2)]"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+            />
+            <Plane className="w-5 h-5 rotate-45 relative z-10" />
+          </div>
+          <span className="font-mono font-bold text-xl tracking-wider drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]">
+            VT
+          </span>
         </motion.div>
 
         <motion.div
