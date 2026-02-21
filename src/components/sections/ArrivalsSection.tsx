@@ -44,7 +44,7 @@ export function ArrivalsSection() {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
         className="flex flex-col gap-2 relative mt-20">
-        <span className="text-primary font-mono text-sm font-bold tracking-widest">GATE E5 //</span>
+        <span className="text-primary font-mono text-sm font-bold tracking-widest">GATE F6 //</span>
         <h2 className="text-6xl font-bold tracking-tight text-white mb-2">Arrivals</h2>
         <p className="text-zinc-400 text-xl max-w-xl leading-relaxed mt-4">
           Reached the final destination. Let's connect and build something together.

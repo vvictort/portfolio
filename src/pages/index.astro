@@ -6,6 +6,7 @@ import { AboutSection } from '../components/sections/AboutSection';
 import { JourneySection } from '../components/sections/JourneySection';
 import { DestinationsSection } from '../components/sections/DestinationsSection';
 import { BeyondCodeSection } from '../components/sections/BeyondCodeSection';
+import { ContactSection } from '../components/sections/ContactSection';
 import { ArrivalsSection } from '../components/sections/ArrivalsSection';
 import { SmoothScroll } from '../components/layout/SmoothScroll';
 import { BackgroundCosmetics } from '../components/ui/BackgroundCosmetics';
@@ -53,7 +54,12 @@ import projects from '../data/projects.json';
 			<BeyondCodeSection client:visible />
 		</section>
 
-        {/* E5: Arrivals Section */}
+        {/* E5: Contact Section */}
+		<section class="min-h-screen w-full relative flex items-center justify-center py-20">
+			<ContactSection client:visible />
+		</section>
+
+        {/* F6: Arrivals Section */}
 		<section id="arrivals" class="min-h-screen w-full relative flex items-center justify-center">
 			<ArrivalsSection client:visible />
 		</section>

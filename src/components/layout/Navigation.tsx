@@ -8,7 +8,8 @@ const navLinks = [
   { href: "#journey", label: "JOURNEY", gate: "B2" },
   { href: "#destinations", label: "DESTINATIONS", gate: "C3" },
   { href: "#beyond-code", label: "BEYOND CODE", gate: "D4" },
-  { href: "#arrivals", label: "ARRIVALS", gate: "E5" },
+  { href: "#contact", label: "CONTACT", gate: "E5" },
+  { href: "#arrivals", label: "ARRIVALS", gate: "F6" },
 ];
 
 export function Navigation() {
