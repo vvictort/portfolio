@@ -66,13 +66,13 @@ export function ArrivalsSection() {
             rel="noopener noreferrer"
             className="bg-[#0a0a0a] hover:bg-[#111] transition-all duration-300 border border-white/5 rounded-2xl p-8 flex flex-col group relative overflow-hidden">
             <div className="flex items-center justify-between mb-16">
-              <contact.icon className="w-7 h-7 text-zinc-500 group-hover:text-primary transition-colors" />
-              <ArrowUpRight className="w-5 h-5 text-zinc-500 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
+              <contact.icon className="w-7 h-7 text-zinc-500 group-hover:text-primary transition-colors duration-300" />
+              <ArrowUpRight className="w-5 h-5 text-zinc-500 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300 ease-out" />
             </div>
 
             <div className="flex flex-col gap-1 z-10">
               <span className="text-primary font-mono text-[10px] tracking-widest uppercase mb-2">{contact.id}</span>
-              <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-primary transition-colors">
+              <h3 className="text-2xl font-mono uppercase tracking-wider font-bold text-white mb-1 group-hover:text-primary transition-colors duration-300">
                 {contact.name}
               </h3>
               <span className="text-zinc-500 font-mono text-sm">{contact.handle}</span>

@@ -44,7 +44,7 @@ export function BeyondCodeSection() {
             key={i}
             className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-8 flex flex-col items-center gap-4 group hover:border-primary/50 transition-colors">
             <item.icon className="w-8 h-8 text-zinc-600 group-hover:text-primary transition-colors" />
-            <h3 className="text-white font-bold text-lg mt-2">{item.label}</h3>
+            <h3 className="font-mono text-sm tracking-widest uppercase text-white font-bold mt-2">{item.label}</h3>
             <p className="text-zinc-500 font-mono text-xs text-center leading-relaxed">{item.desc}</p>
           </motion.div>
         ))}

@@ -114,14 +114,16 @@ export function DestinationsSection() {
               </div>
               <div className="flex items-center gap-3">
                 <span className="text-zinc-600 font-mono text-[10px] uppercase tracking-widest">GATE {proj.gate}</span>
-                <span className="text-green-500 font-mono text-[10px] uppercase tracking-widest font-bold">
+                <span className="text-green-500 font-mono text-[10px] uppercase tracking-widest font-bold [text-shadow:0_0_8px_rgba(34,197,94,0.6)]">
                   {proj.status}
                 </span>
               </div>
             </div>
 
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-2xl font-bold text-white group-hover:text-primary transition-colors">{proj.title}</h3>
+              <h3 className="text-2xl font-mono uppercase tracking-wider font-bold text-white group-hover:text-primary transition-colors">
+                {proj.title}
+              </h3>
               <Plane className="w-5 h-5 text-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
 
@@ -131,7 +133,7 @@ export function DestinationsSection() {
               {proj.tags.map((tag, j) => (
                 <span
                   key={j}
-                  className="bg-white/5 border border-white/10 px-3 py-1 rounded text-zinc-300 font-mono text-[10px]">
+                  className="px-3 py-1 rounded font-mono text-[10px] font-bold tracking-widest text-primary bg-primary/10 border border-primary/30 shadow-[0_0_8px_rgba(250,204,21,0.4)] transition-all">
                   {tag}
                 </span>
               ))}

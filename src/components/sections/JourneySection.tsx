@@ -57,11 +57,13 @@ export function JourneySection() {
                   <div
                     key={i}
                     className="flex items-center justify-between bg-[#111] border border-white/5 rounded-md px-4 py-3">
-                    <span className="text-white text-sm">{item.name}</span>
+                    <span className="font-mono text-xs text-white uppercase tracking-wider">{item.name}</span>
                     <span
                       className={cn(
                         "font-mono text-[10px] tracking-widest",
-                        item.active ? "text-green-500" : "text-zinc-500",
+                        item.active
+                          ? "text-green-500 [text-shadow:0_0_8px_rgba(34,197,94,0.6)]"
+                          : "text-zinc-500 [text-shadow:0_0_8px_rgba(113,113,122,0.5)]",
                       )}>
                       {item.status}
                     </span>
@@ -139,7 +141,9 @@ export function JourneySection() {
                   <span className="text-white font-bold">{log.dest}</span>
                 </div>
 
-                <h3 className="text-xl text-white font-bold mb-3 relative z-10">{log.title}</h3>
+                <h3 className="text-xl font-mono uppercase tracking-wider text-white font-bold mb-3 relative z-10">
+                  {log.title}
+                </h3>
                 <p className="text-zinc-500 text-sm leading-relaxed relative z-10 flex-1">{log.desc}</p>
               </motion.div>
 

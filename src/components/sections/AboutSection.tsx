@@ -45,7 +45,7 @@ export function AboutSection() {
           {/* Pass Top row: YVR ...DEV */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex flex-col">
-              <span className="text-5xl font-bold tracking-wider text-white">YVR</span>
+              <span className="text-5xl font-mono font-bold tracking-wider text-white">YVR</span>
               <span className="text-zinc-500 font-mono text-xs mt-1 uppercase">Origin</span>
             </div>
 
@@ -56,13 +56,13 @@ export function AboutSection() {
             </div>
 
             <div className="flex flex-col items-end pr-8 border-r border-white/10">
-              <span className="text-5xl font-bold tracking-wider text-white">DEV</span>
+              <span className="text-5xl font-mono font-bold tracking-wider text-white">DEV</span>
               <span className="text-zinc-500 font-mono text-xs mt-1 uppercase">Destination</span>
             </div>
 
             <div className="flex flex-col items-center justify-center pl-8">
               <span className="text-zinc-500 font-mono text-xs uppercase mb-1 tracking-widest">Gate</span>
-              <span className="text-primary text-4xl font-bold">A1</span>
+              <span className="text-primary text-4xl font-mono font-bold">A1</span>
               <span className="text-zinc-500 font-mono text-[10px] uppercase mt-1 tracking-widest">Boarding</span>
             </div>
           </div>
@@ -99,7 +99,7 @@ export function AboutSection() {
               <item.icon className="w-5 h-5 text-primary" />
               <div className="flex flex-col gap-1">
                 <span className="text-zinc-600 font-mono text-[10px] uppercase tracking-widest">{item.label}</span>
-                <span className="text-sm font-medium text-white">{item.value}</span>
+                <span className="font-mono text-sm text-white uppercase tracking-wider">{item.value}</span>
               </div>
             </div>
           ))}
