@@ -1,23 +1,11 @@
-# Astro Portfolio
 
-Portfolio starter built with Astro + Tailwind CSS v4 using an airport-terminal visual style.
+  # Design portfolio website
 
-## Run
+  This is a code bundle for Design portfolio website. The original project is available at https://www.figma.com/design/LaZEINSYGvCBD7SrBW1dtl/Design-portfolio-website.
 
-```bash
-npm install
-npm run dev
-```
+  ## Running the code
 
-## Build
+  Run `npm i` to install the dependencies.
 
-```bash
-npm run build
-npm run preview
-```
-
-## Customize
-
-- Update hero + profile text in `src/pages/index.astro`.
-- Replace project/experience arrays in `src/pages/index.astro`.
-- Update global theme tokens and utilities in `src/styles/global.css`.
+  Run `npm run dev` to start the development server.
+  
