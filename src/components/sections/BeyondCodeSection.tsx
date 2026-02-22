@@ -34,17 +34,18 @@ export function BeyondCodeSection() {
         viewport={{ once: true, margin: "-100px" }}
         className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
         {[
-          { icon: Mountain, label: "Outdoors", desc: "Hiking the local trails" },
-          { icon: UtensilsCrossed, label: "Food", desc: "Trying new spots and dishes" },
+          { icon: Mountain, label: "Outdoors", desc: "Hiking the local trails", href: "/outdoor" },
+          { icon: UtensilsCrossed, label: "Food", desc: "Trying new spots and dishes", href: "/food" },
         ].map((item, i) => (
-          <motion.div
+          <motion.a
+            href={item.href}
             variants={itemVars}
             key={i}
             className="cursor-pointer bg-[#0a0a0a] border border-white/5 rounded-2xl p-8 flex flex-col items-center gap-4 group hover:border-primary/50 transition-colors">
             <item.icon className="w-8 h-8 text-zinc-600 group-hover:text-primary transition-colors" />
             <h3 className="font-mono text-sm tracking-widest uppercase text-white font-bold mt-2">{item.label}</h3>
             <p className="text-zinc-500 font-mono text-xs text-center leading-relaxed">{item.desc}</p>
-          </motion.div>
+          </motion.a>
         ))}
       </motion.div>
     </div>

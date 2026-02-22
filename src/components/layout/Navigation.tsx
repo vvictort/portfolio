@@ -4,12 +4,17 @@ import { cn } from "../../utils";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
-  { href: "#about", label: "ABOUT", gate: "A1" },
-  { href: "#journey", label: "JOURNEY", gate: "B2" },
-  { href: "#destinations", label: "DESTINATIONS", gate: "C3" },
-  { href: "#beyond-code", label: "BEYOND CODE", gate: "D4" },
-  { href: "#contact", label: "CONTACT", gate: "E5" },
-  { href: "#arrivals", label: "ARRIVALS", gate: "F6" },
+  { href: "/#about", label: "ABOUT", gate: "A1" },
+  { href: "/#journey", label: "JOURNEY", gate: "B2" },
+  { href: "/#destinations", label: "DESTINATIONS", gate: "C3" },
+  { href: "/#beyond-code", label: "BEYOND CODE", gate: "D4" },
+  { href: "/#contact", label: "CONTACT", gate: "E5" },
+  { href: "/#arrivals", label: "ARRIVALS", gate: "F6" },
+];
+
+const galleryLinks = [
+  { href: "/outdoor", label: "OUTDOOR LOG", gate: "04-A" },
+  { href: "/food", label: "FOOD LOG", gate: "04-B" },
 ];
 
 export function Navigation() {
@@ -151,58 +156,66 @@ export function Navigation() {
                 <div className="w-12 h-px bg-primary/30" />
               </motion.div>
 
-              <div className="flex flex-col gap-3">
-                {navLinks.map((link, i) => {
-                  const isActive = activeSection === link.href.substring(1);
-                  return (
-                    <motion.a
-                      initial={{ opacity: 0, x: -30, filter: "blur(8px)" }}
-                      animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-                      exit={{ opacity: 0, x: -20, filter: "blur(4px)" }}
-                      transition={{ delay: 0.2 + i * 0.08, duration: 0.5, ease: "easeOut" }}
-                      key={link.href}
-                      href={link.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={cn(
-                        "group relative flex items-center justify-between p-6 rounded-2xl transition-all duration-300 transform-gpu backface-hidden",
-                        isActive
-                          ? "bg-primary/10 text-primary border border-primary/30 shadow-[0_0_20px_rgba(250,204,21,0.05)]"
-                          : "bg-white/3 text-zinc-400 border border-white/5 hover:bg-white/5 hover:text-white",
-                      )}>
-                      <div className="flex flex-col gap-1">
-                        <span
-                          className={cn(
-                            "font-mono text-xs tracking-[0.2em] mb-1 font-bold",
-                            isActive ? "text-primary" : "text-zinc-600",
-                          )}>
-                          GATE {link.gate}
-                        </span>
-                        <span className="text-2xl font-mono font-bold tracking-widest uppercase">{link.label}</span>
-                      </div>
+              {/* Main Nav */}
+              {navLinks.map((link, i) => {
+                const isActive = activeSection === link.href.split("#")[1];
+                return (
+                  <motion.a
+                    initial={{ opacity: 0, x: -30, filter: "blur(8px)" }}
+                    animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, x: -20, filter: "blur(4px)" }}
+                    transition={{ delay: 0.1 + i * 0.05, duration: 0.5, ease: "easeOut" }}
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={cn(
+                      "group relative flex items-center justify-between p-5 rounded-2xl transition-all duration-300 transform-gpu backface-hidden",
+                      isActive
+                        ? "bg-primary/10 text-primary border border-primary/30 shadow-[0_0_20px_rgba(250,204,21,0.05)]"
+                        : "bg-white/3 text-zinc-400 border border-white/5 hover:bg-white/5 hover:text-white",
+                    )}>
+                    <div className="flex flex-col gap-1">
+                      <span
+                        className={cn(
+                          "font-mono text-[9px] tracking-[0.2em] mb-1 font-bold",
+                          isActive ? "text-primary" : "text-zinc-600",
+                        )}>
+                        GATE {link.gate}
+                      </span>
+                      <span className="text-xl font-mono font-bold tracking-widest uppercase">{link.label}</span>
+                    </div>
+                    <ChevronRight className={cn("w-4 h-4", isActive ? "text-primary" : "text-zinc-800")} />
+                  </motion.a>
+                );
+              })}
 
-                      <div className="flex items-center gap-4">
-                        <div className="flex flex-col items-end opacity-40 group-hover:opacity-100 transition-opacity">
-                          <span className="text-[8px] font-mono text-zinc-400">FLIGHT</span>
-                          <span className="text-[10px] font-mono font-bold tracking-tighter">VT-{i + 1}00</span>
-                        </div>
-                        <ChevronRight
-                          className={cn(
-                            "w-5 h-5 transition-transform group-hover:translate-x-1",
-                            isActive ? "text-primary" : "text-zinc-700",
-                          )}
-                        />
-                      </div>
+              {/* Discovery Logs Divider */}
+              <div className="flex items-center gap-4 my-4 px-4 overflow-hidden">
+                <span className="text-[8px] font-mono text-zinc-600 tracking-[0.5em] uppercase whitespace-nowrap">
+                  Discovery Logs
+                </span>
+                <div className="flex-1 h-px bg-white/5" />
+              </div>
 
-                      {/* Active Indicator Bar */}
-                      {isActive && (
-                        <motion.div
-                          layoutId="mobile-nav-indicator"
-                          className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-primary rounded-r-full shadow-[0_0_15px_rgba(250,204,21,0.5)]"
-                        />
-                      )}
-                    </motion.a>
-                  );
-                })}
+              {/* Gallery Nav */}
+              <div className="grid grid-cols-2 gap-3">
+                {galleryLinks.map((link, i) => (
+                  <motion.a
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 + i * 0.1 }}
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="bg-white/3 border border-white/5 rounded-xl p-4 flex flex-col gap-2 hover:bg-white/5 hover:border-primary/20 transition-all group">
+                    <span className="text-[8px] font-mono text-zinc-600 tracking-widest uppercase font-bold group-hover:text-primary transition-colors">
+                      {link.gate}
+                    </span>
+                    <span className="text-[10px] font-mono text-white font-bold tracking-widest uppercase group-hover:text-primary transition-colors">
+                      {link.label}
+                    </span>
+                  </motion.a>
+                ))}
               </div>
 
               {/* Bottom Decoration */}

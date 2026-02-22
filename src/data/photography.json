@@ -1,0 +1,24 @@
+{
+  "outdoor": [
+    {
+      "id": "exp-1",
+      "title": "Mountain Peak",
+      "location": "Vancouver, BC",
+      "coordinates": "49.2827° N, 123.1207° W",
+      "date": "2024-05-15",
+      "image": "/photography/outdoor/placeholder.webp",
+      "altitude": "1250m"
+    }
+  ],
+  "food": [
+    {
+      "id": "menu-1",
+      "title": "Local Ramen",
+      "location": "Downtown, Vancouver",
+      "coordinates": "49.2856° N, 123.1115° W",
+      "date": "2024-06-20",
+      "image": "/photography/food/placeholder.webp",
+      "dish": "Tonkotsu Special"
+    }
+  ]
+}
