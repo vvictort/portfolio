@@ -12,7 +12,8 @@ import { SmoothScroll } from '../components/layout/SmoothScroll';
 import { BackgroundCosmetics } from '../components/ui/BackgroundCosmetics';
 import { HeroStars } from '../components/ui/HeroStars';
 
-import projects from '../data/projects.json';
+import projectsData from '../data/projects.json';
+const projects = [...projectsData].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 ---
 
 <MainLayout title="Victor Thai | Portfolio">
@@ -27,10 +28,10 @@ import projects from '../data/projects.json';
 			<div class="w-full max-w-6xl mx-auto px-8 relative z-10">
                 <FlightBoard client:idle />
             </div>
-            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-zinc-500 font-mono text-sm animate-pulse pointer-events-none">
+            <a href="#about" class="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-0.5 text-zinc-500 hover:text-white transition-colors font-mono text-sm animate-pulse cursor-pointer group z-20">
                 <span class="tracking-widest">SCROLL TO BOARD</span>
-                <span class="text-xl">⌄</span>
-            </div>
+                <span class="text-xl transition-transform group-hover:translate-y-1 mt-[-4px]">⌄</span>
+            </a>
             </div>
 		</section>
 

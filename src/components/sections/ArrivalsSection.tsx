@@ -57,7 +57,7 @@ export function ArrivalsSection() {
             href={contact.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-[#0a0a0a] hover:bg-[#111] transition-all duration-300 border border-white/5 rounded-2xl p-8 flex flex-col group relative overflow-hidden">
+            className="bg-[#0a0a0a] hover:bg-[#111] transition-[background-color,border-color] duration-300 border border-white/5 rounded-2xl p-8 flex flex-col group relative overflow-hidden transform-gpu backface-hidden will-change-[transform,opacity]">
             <div className="flex items-center justify-between mb-16">
               <contact.icon className="w-7 h-7 text-zinc-500 group-hover:text-primary transition-colors duration-300" />
               <ArrowUpRight className="w-5 h-5 text-zinc-500 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300 ease-out" />

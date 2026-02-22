@@ -41,7 +41,7 @@ export function AboutSection() {
         {/* Boarding Pass */}
         <motion.div
           variants={itemVars}
-          className="w-full bg-[#050505]/80 backdrop-blur-xl border border-white/10 rounded-3xl flex flex-col p-8 relative overflow-hidden shadow-2xl group">
+          className="w-full bg-[#050505]/80 backdrop-blur-xl border border-white/10 rounded-3xl flex flex-col p-8 relative overflow-hidden shadow-2xl group transform-gpu backface-hidden will-change-[transform,opacity]">
           {/* Background Decor */}
           <div
             className="absolute inset-0 opacity-20 pointer-events-none"

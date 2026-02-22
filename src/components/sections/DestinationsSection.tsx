@@ -1,6 +1,7 @@
 import React from "react";
 import { Plane, FolderGit2, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
+import { cn } from "../../utils";
 
 export interface Project {
   code: string;
@@ -8,6 +9,8 @@ export interface Project {
   gate: string;
   status: string;
   title: string;
+  date: string;
+  category: string;
   description: string;
   tags: string[];
   github?: string;
@@ -59,7 +62,7 @@ export function DestinationsSection({ projects }: Props) {
           <motion.div
             variants={itemVars}
             key={i}
-            className="group relative bg-[#050505]/80 backdrop-blur-xl border border-white/10 rounded-3xl hover:border-primary/30 transition-all duration-500 hover:shadow-[0_0_30px_rgba(250,204,21,0.1)] flex flex-col overflow-hidden h-full">
+            className="group relative bg-[#050505]/80 backdrop-blur-xl border border-white/10 rounded-3xl hover:border-primary/30 transition-[border-color,box-shadow] duration-500 hover:shadow-[0_0_30px_rgba(250,204,21,0.1)] flex flex-col overflow-hidden h-full transform-gpu backface-hidden will-change-[transform,opacity]">
             {/* Background Decor */}
             <div
               className="absolute inset-0 opacity-10 pointer-events-none"
@@ -102,12 +105,28 @@ export function DestinationsSection({ projects }: Props) {
               <p className="text-zinc-400 text-sm leading-relaxed mb-8 flex-1">{proj.description}</p>
 
               <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded-md border border-white/5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                  <span className="text-green-500 font-mono text-[10px] uppercase tracking-widest font-bold [text-shadow:0_0_8px_rgba(34,197,94,0.6)]">
-                    {proj.status}
-                  </span>
-                </div>
+                {(() => {
+                  const isLanded = proj.status === "LANDED";
+                  const colorClass = isLanded ? "bg-green-500" : "bg-cyan-500";
+                  const textClass = isLanded ? "text-green-500" : "text-cyan-500";
+                  const shadowClass = isLanded
+                    ? "[text-shadow:0_0_8px_rgba(34,197,94,0.6)]"
+                    : "[text-shadow:0_0_8px_rgba(6,182,212,0.6)]";
+
+                  return (
+                    <div className="flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded-md border border-white/5">
+                      <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", colorClass)} />
+                      <span
+                        className={cn(
+                          "font-mono text-[10px] uppercase tracking-widest font-bold",
+                          textClass,
+                          shadowClass,
+                        )}>
+                        {proj.status}
+                      </span>
+                    </div>
+                  );
+                })()}
               </div>
 
               <div className="flex flex-wrap gap-2 mb-8">
