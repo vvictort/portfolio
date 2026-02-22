@@ -35,6 +35,14 @@ export function Navigation() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [isMobileMenuOpen]);
+
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center w-full bg-transparent transition-all duration-500">
@@ -116,61 +124,104 @@ export function Navigation() {
         </div>
       </nav>
 
-      {/* Mobile Menu Dropdown (Clean, sliding list) */}
+      {/* Mobile Menu Overlay (Immersive "Boarding Pass" style) */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="fixed top-[73px] left-0 right-0 z-40 bg-[#0a0a0a]/98 backdrop-blur-3xl border-b border-white/10 md:hidden overflow-hidden shadow-2xl">
-            <div className="flex flex-col px-6 py-6 gap-2">
-              <span className="text-[10px] font-mono text-zinc-500 tracking-widest mb-2 px-2">DEPARTURES</span>
-              {navLinks.map((link, i) => {
-                const isActive = activeSection === link.href.substring(1);
-                return (
-                  <motion.a
-                    initial={{ opacity: 0, x: -20, filter: "blur(4px)" }}
-                    animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-                    transition={{ delay: i * 0.05, duration: 0.3 }}
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={cn(
-                      "group flex items-center justify-between p-4 rounded-xl transition-all duration-300",
-                      isActive
-                        ? "bg-primary/10 text-primary border border-primary/20 shadow-[0_0_15px_rgba(250,204,21,0.05)]"
-                        : "text-zinc-400 hover:text-white hover:bg-white/5 border border-transparent",
-                    )}>
-                    <div className="flex items-center gap-4">
-                      <span
-                        className={cn(
-                          "font-mono text-sm tracking-widest font-semibold",
-                          isActive ? "drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" : "",
-                        )}>
-                        {link.label}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex flex-col items-end">
-                        <span className="text-[9px] font-mono text-zinc-500">GATE</span>
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-100 bg-black/60 backdrop-blur-2xl md:hidden overflow-hidden flex flex-col pt-24">
+            {/* Background Texture/Grid */}
+            <div className="absolute inset-0 bg-airport-grid opacity-20 pointer-events-none" />
+
+            <div className="flex flex-col px-8 relative z-10 overflow-y-auto pb-12">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="flex items-center justify-between mb-12">
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-mono text-zinc-500 tracking-[0.3em] uppercase mb-1">
+                    TERMINAL 1
+                  </span>
+                  <span className="text-2xl font-mono font-bold text-white tracking-widest">DEPARTURES</span>
+                </div>
+                <div className="w-12 h-px bg-primary/30" />
+              </motion.div>
+
+              <div className="flex flex-col gap-3">
+                {navLinks.map((link, i) => {
+                  const isActive = activeSection === link.href.substring(1);
+                  return (
+                    <motion.a
+                      initial={{ opacity: 0, x: -30, filter: "blur(8px)" }}
+                      animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                      exit={{ opacity: 0, x: -20, filter: "blur(4px)" }}
+                      transition={{ delay: 0.2 + i * 0.08, duration: 0.5, ease: "easeOut" }}
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={cn(
+                        "group relative flex items-center justify-between p-6 rounded-2xl transition-all duration-300 transform-gpu backface-hidden",
+                        isActive
+                          ? "bg-primary/10 text-primary border border-primary/30 shadow-[0_0_20px_rgba(250,204,21,0.05)]"
+                          : "bg-white/3 text-zinc-400 border border-white/5 hover:bg-white/5 hover:text-white",
+                      )}>
+                      <div className="flex flex-col gap-1">
                         <span
-                          className={cn("text-xs font-mono font-bold", isActive ? "text-primary" : "text-zinc-300")}>
-                          {link.gate}
+                          className={cn(
+                            "font-mono text-xs tracking-[0.2em] mb-1 font-bold",
+                            isActive ? "text-primary" : "text-zinc-600",
+                          )}>
+                          GATE {link.gate}
                         </span>
+                        <span className="text-2xl font-mono font-bold tracking-widest uppercase">{link.label}</span>
                       </div>
-                      <ChevronRight
-                        className={cn(
-                          "w-4 h-4 transition-transform group-hover:translate-x-1",
-                          isActive ? "text-primary" : "text-zinc-600",
-                        )}
-                      />
-                    </div>
-                  </motion.a>
-                );
-              })}
+
+                      <div className="flex items-center gap-4">
+                        <div className="flex flex-col items-end opacity-40 group-hover:opacity-100 transition-opacity">
+                          <span className="text-[8px] font-mono text-zinc-400">FLIGHT</span>
+                          <span className="text-[10px] font-mono font-bold tracking-tighter">VT-{i + 1}00</span>
+                        </div>
+                        <ChevronRight
+                          className={cn(
+                            "w-5 h-5 transition-transform group-hover:translate-x-1",
+                            isActive ? "text-primary" : "text-zinc-700",
+                          )}
+                        />
+                      </div>
+
+                      {/* Active Indicator Bar */}
+                      {isActive && (
+                        <motion.div
+                          layoutId="mobile-nav-indicator"
+                          className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-primary rounded-r-full shadow-[0_0_15px_rgba(250,204,21,0.5)]"
+                        />
+                      )}
+                    </motion.a>
+                  );
+                })}
+              </div>
+
+              {/* Bottom Decoration */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8 }}
+                className="mt-12 pt-8 border-t border-white/5 flex flex-col items-center gap-4 opacity-40">
+                <Plane className="w-6 h-6 rotate-45 text-zinc-600" />
+                <span className="font-mono text-[8px] tracking-[0.4em] text-zinc-500">READY FOR DEPARTURE</span>
+              </motion.div>
             </div>
+
+            {/* Close Button UI Redesign (Pill) */}
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="absolute top-8 right-8 w-12 h-12 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-primary active:scale-90 transition-transform">
+              <X className="w-6 h-6" />
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
