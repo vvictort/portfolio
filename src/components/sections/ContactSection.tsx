@@ -53,7 +53,7 @@ export function ContactSection() {
         {/* Contact Form (Left Side, 3 cols wide) */}
         <motion.div
           variants={itemVars}
-          className="lg:col-span-3 bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 md:p-8 flex flex-col relative overflow-hidden group">
+          className="lg:col-span-3 bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 md:p-8 flex flex-col relative overflow-hidden group h-full">
           {/* Background subtle effect */}
           <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
@@ -66,7 +66,7 @@ export function ContactSection() {
             <span className="font-mono text-[10px] tracking-widest text-zinc-500 uppercase">MSG-2026</span>
           </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4 relative z-10 font-mono text-sm">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4 relative z-10 font-mono text-sm flex-1 min-h-0">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="relative group">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-primary transition-colors" />
@@ -103,12 +103,12 @@ export function ContactSection() {
               />
             </div>
 
-            <div className="relative group">
+            <div className="relative group flex-1 min-h-[12rem]">
               <textarea
                 required
                 placeholder="Your Message *"
                 rows={5}
-                className="w-full bg-[#111] border border-white/10 rounded-lg py-4 px-4 text-white placeholder:text-zinc-600 focus:outline-none focus:border-primary/50 transition-colors resize-none"
+                className="w-full h-full min-h-[12rem] bg-[#111] border border-white/10 rounded-lg py-4 px-4 text-white placeholder:text-zinc-600 focus:outline-none focus:border-primary/50 transition-colors resize-none"
                 value={formState.message}
                 onChange={(e) => setFormState({ ...formState, message: e.target.value })}
               />
@@ -116,7 +116,7 @@ export function ContactSection() {
 
             <button
               type="submit"
-              className="mt-4 self-start flex items-center gap-2 bg-primary/90 hover:bg-primary text-black font-bold uppercase tracking-widest px-6 py-3 rounded-lg transition-all shadow-[0_0_15px_rgba(250,204,21,0.2)] hover:shadow-[0_0_20px_rgba(250,204,21,0.4)] hover:-translate-y-0.5">
+              className="mt-4 lg:mt-auto w-full flex items-center justify-center gap-2 cursor-pointer bg-primary/90 hover:bg-primary text-black font-bold uppercase tracking-widest px-6 py-3 rounded-lg transition-all shadow-[0_0_15px_rgba(250,204,21,0.2)] hover:shadow-[0_0_20px_rgba(250,204,21,0.4)] hover:-translate-y-0.5">
               <Send className="w-4 h-4" />
               <span>SEND MESSAGE</span>
             </button>
@@ -124,11 +124,11 @@ export function ContactSection() {
         </motion.div>
 
         {/* Right Side Cards (2 cols wide) */}
-        <div className="lg:col-span-2 flex flex-col gap-6">
+        <div className="lg:col-span-2 flex flex-col gap-6 h-full">
           {/* Resume Card */}
           <motion.div
             variants={itemVars}
-            className="flex-1 bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 md:p-8 flex flex-col relative overflow-hidden group">
+            className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 md:p-8 flex flex-col relative overflow-hidden group shrink-0">
             <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
             <div className="flex items-center gap-2 text-primary font-mono text-xs font-bold tracking-widest uppercase mb-6">
@@ -155,7 +155,7 @@ export function ContactSection() {
           {/* Flight Info Card */}
           <motion.div
             variants={itemVars}
-            className="flex-1 bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 md:p-8 flex flex-col relative overflow-hidden group">
+            className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 md:p-8 flex flex-col relative overflow-hidden group lg:flex-1">
             <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
             <div className="flex items-center gap-2 text-primary font-mono text-xs font-bold tracking-widest uppercase mb-8">

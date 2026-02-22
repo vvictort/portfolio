@@ -27,15 +27,30 @@ const INITIAL_FLIGHTS: Flight[] = [
 
 const WELCOME: Flight[] = [
   { time: "", flight: "", iata: "", destination: "WELCOME TO", gate: "MY", remarks: "" },
+  { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
+  { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
   { time: "", flight: "", iata: "", destination: "PORTFOLIO", gate: "", remarks: "" },
   { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
+  { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
   { time: "I", flight: "BUILD", iata: "", destination: "", gate: "", remarks: "SOFTWARE" },
+  { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
+  { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
   { time: "", flight: "", iata: "", destination: "EXPLORE", gate: "MY", remarks: "WORK" },
   { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
-  { time: "", flight: "SCROLL", iata: "", destination: "", gate: "", remarks: "DOWN" },
+  { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
+];
+
+const WELCOME_MOBILE: Flight[] = [
+  { time: "", flight: "", iata: "", destination: "WELCOME TO MY", gate: "", remarks: "" },
   { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
   { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
+  { time: "", flight: "", iata: "", destination: "PORTFOLIO", gate: "", remarks: "" },
   { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
+  { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
+  { time: "I", flight: "BUILD", iata: "", destination: "SOFTWARE", gate: "", remarks: "" },
+  { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
+  { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
+  { time: "", flight: "", iata: "", destination: "VIEW MY WORK", gate: "", remarks: "" },
   { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
   { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
 ];
@@ -106,6 +121,21 @@ function remColor(r: string): string {
 export const FlightBoard: React.FC = () => {
   const [data, setData] = useState(INITIAL_FLIGHTS);
   const [flip, setFlip] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+
+    setIsMobile(mq.matches);
+    mq.addEventListener("change", onChange);
+
+    return () => {
+      mq.removeEventListener("change", onChange);
+    };
+  }, []);
+
+  const welcomeRows = isMobile ? WELCOME_MOBILE : WELCOME;
 
   useEffect(() => {
     let showingWelcome = false;
@@ -113,7 +143,7 @@ export const FlightBoard: React.FC = () => {
     // Initial jump to welcome text after 4s
     const initialTimeout = setTimeout(() => {
       setFlip(true);
-      setData(WELCOME);
+      setData(welcomeRows);
       showingWelcome = true;
       setTimeout(() => setFlip(false), 1500);
     }, 4000);
@@ -124,7 +154,7 @@ export const FlightBoard: React.FC = () => {
       if (showingWelcome) {
         setData(INITIAL_FLIGHTS);
       } else {
-        setData(WELCOME);
+        setData(welcomeRows);
       }
       showingWelcome = !showingWelcome;
       setTimeout(() => setFlip(false), 1500);
@@ -134,7 +164,7 @@ export const FlightBoard: React.FC = () => {
       clearTimeout(initialTimeout);
       clearInterval(interval);
     };
-  }, []);
+  }, [welcomeRows]);
 
   return (
     <div className="fb">
@@ -145,8 +175,8 @@ export const FlightBoard: React.FC = () => {
       </div>
 
       {/* Scrollable container for mobile */}
-      <div className="w-full overflow-x-auto pb-4 scrollbar-hide">
-        <div className="fb-grid min-w-max pr-8">
+      <div className="w-full overflow-x-auto pb-4 md:pb-0 scrollbar-hide">
+        <div className="fb-grid min-w-max pr-2 md:pr-0">
           {/* Column labels as first row */}
           <span className="fb-label">Time</span>
           <span className="fb-label">Flight</span>

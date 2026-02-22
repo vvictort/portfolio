@@ -1,5 +1,5 @@
 import React from "react";
-import { Plane, Github, ExternalLink } from "lucide-react";
+import { Plane, FolderGit2, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 
 export interface Project {
@@ -41,7 +41,7 @@ export function DestinationsSection({ projects }: Props) {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-0 mb-4 md:mb-0">
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white">Destinations</h2>
           <a
-            href="#"
+            href="https://github.com/vvictort"
             className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors font-mono text-xs uppercase tracking-widest mt-2 md:mt-0">
             ALL FLIGHTS <ExternalLink className="w-4 h-4" />
           </a>
@@ -125,7 +125,7 @@ export function DestinationsSection({ projects }: Props) {
                 <a
                   href={proj.github}
                   className="flex-1 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg py-3 text-sm font-mono tracking-widest transition-colors duration-300">
-                  <Github className="w-4 h-4" />
+                  <FolderGit2 className="w-4 h-4" />
                   <span>REPO</span>
                 </a>
                 {proj.live && (

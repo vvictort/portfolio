@@ -1,5 +1,5 @@
 import React from "react";
-import { Github, Linkedin, Mail, ArrowUpRight, Plane } from "lucide-react";
+import { FolderGit2, BriefcaseBusiness, ArrowUpRight, Plane } from "lucide-react";
 import { motion } from "framer-motion";
 
 const contacts = [
@@ -7,22 +7,15 @@ const contacts = [
     id: "GIT",
     name: "GitHub",
     handle: "@vvictort",
-    icon: Github,
+    icon: FolderGit2,
     link: "https://github.com/vvictort",
   },
   {
     id: "LIN",
     name: "LinkedIn",
     handle: "vvictort20",
-    icon: Linkedin,
+    icon: BriefcaseBusiness,
     link: "https://linkedin.com/in/vvictort20",
-  },
-  {
-    id: "EML",
-    name: "Email",
-    handle: "hello@example.com",
-    icon: Mail,
-    link: "mailto:hello@example.com",
   },
 ];
 
@@ -56,7 +49,7 @@ export function ArrivalsSection() {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-100px" }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
+        className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
         {contacts.map((contact, i) => (
           <motion.a
             variants={itemVars}

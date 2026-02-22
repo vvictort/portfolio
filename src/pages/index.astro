@@ -36,32 +36,32 @@ import projects from '../data/projects.json';
 
 		{/* A1: About Section */}
 		<section id="about" class="min-h-screen w-full relative flex items-center justify-center py-20">
-			<AboutSection client:visible />
+			<AboutSection client:idle />
 		</section>
 
         {/* B2: Journey Section */}
 		<section id="journey" class="min-h-screen w-full relative flex items-center justify-center py-20">
-			<JourneySection client:visible />
+			<JourneySection client:idle />
 		</section>
 
         {/* C3: Destinations Section */}
 		<section id="destinations" class="min-h-screen w-full relative flex items-center justify-center py-20">
-			<DestinationsSection client:visible projects={projects} />
+			<DestinationsSection client:idle projects={projects} />
 		</section>
 
         {/* D4: Beyond Code Section */}
 		<section id="beyond-code" class="min-h-screen w-full relative flex items-center justify-center py-20">
-			<BeyondCodeSection client:visible />
+			<BeyondCodeSection client:idle />
 		</section>
 
         {/* E5: Contact Section */}
 		<section class="min-h-screen w-full relative flex items-center justify-center py-20">
-			<ContactSection client:visible />
+			<ContactSection client:idle />
 		</section>
 
         {/* F6: Arrivals Section */}
 		<section id="arrivals" class="min-h-screen w-full relative flex items-center justify-center">
-			<ArrivalsSection client:visible />
+			<ArrivalsSection client:idle />
 		</section>
 		</main>
 	</SmoothScroll>
