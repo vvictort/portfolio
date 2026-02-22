@@ -1,5 +1,5 @@
 import React from "react";
-import { Plane, MapPin, GraduationCap, Code } from "lucide-react";
+import { Plane, MapPin, GraduationCap, Code, Timer } from "lucide-react";
 import { cn } from "../../utils";
 import { motion } from "framer-motion";
 
@@ -129,10 +129,11 @@ export function AboutSection() {
         </motion.div>
 
         {/* Info Cards */}
-        <motion.div variants={itemVars} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <motion.div variants={itemVars} className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[
             { icon: MapPin, label: "Location", value: "Vancouver, BC" },
             { icon: GraduationCap, label: "Education", value: "CS @ UBC" },
+            { icon: Timer, label: "Year", value: "3rd Year" },
             { icon: Code, label: "Focus", value: "Full-Stack Dev" },
           ].map((item, i) => (
             <div key={i} className="bg-[#0a0a0a] border border-white/5 rounded-xl p-6 flex flex-col gap-4">
@@ -156,9 +157,10 @@ export function AboutSection() {
             architecture.
           </p>
           <p>
-            When I'm not coding, you'll find me exploring the mountains around Vancouver, shooting hoops at the campus
-            courts, or discovering new music at local vinyl shops. I believe the best software comes from diverse
-            experiences and perspectives.
+            When I'm not coding, you'll usually find me traveling to new places or just wandering through different
+            parts of the city. I'm always looking for a good meal beyond the screen—love exploring everything from urban
+            landscapes to local food scenes. I believe the best software comes from being curious about the world and
+            staying open to new experiences.
           </p>
         </motion.div>
       </motion.div>
