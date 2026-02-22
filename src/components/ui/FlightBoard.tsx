@@ -55,11 +55,9 @@ const WELCOME_MOBILE: Flight[] = [
   { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
 ];
 
-// ── Scramble helpers ───────────────────────────────
 const FLIP = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 const rand = () => FLIP[Math.floor(Math.random() * FLIP.length)];
 
-// ── FlapField: a block of character tiles ──────────
 interface FlapFieldProps {
   value: string;
   width: number;
@@ -108,7 +106,6 @@ const FlapField: React.FC<FlapFieldProps> = ({ value, width, color = "#e4e4e7", 
   );
 };
 
-// ── Remark color ───────────────────────────────────
 function remColor(r: string): string {
   const t = r.trim();
   if (t === "DELAYED") return "#f87171";
@@ -117,7 +114,6 @@ function remColor(r: string): string {
   return "#e4e4e7";
 }
 
-// ── FlightBoard ────────────────────────────────────
 export const FlightBoard: React.FC = () => {
   const [data, setData] = useState(INITIAL_FLIGHTS);
   const [flip, setFlip] = useState(false);
