@@ -7,6 +7,7 @@ import {
 
 const CONTACT_EMAIL = "vvictort20@gmail.com";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const RESEND_FROM_EMAIL_PATTERN = /^(?:[^<>\r\n]+<[^<>\s@]+@[^\s@]+\.[^\s@]+>|[^<>\s@]+@[^\s@]+\.[^\s@]+)$/;
 const RESEND_TIMEOUT_MS = 8000;
 
 function deliveryUnavailableMessage() {
@@ -46,6 +47,21 @@ function sanitize(input: unknown, maxLength: number) {
   return typeof input === "string" ? input.trim().slice(0, maxLength) : "";
 }
 
+function normalizeEnvValue(value: string | undefined) {
+  const trimmedValue = value?.trim() || "";
+
+  if (!trimmedValue) return "";
+
+  const hasWrappedDoubleQuotes = trimmedValue.startsWith('"') && trimmedValue.endsWith('"');
+  const hasWrappedSingleQuotes = trimmedValue.startsWith("'") && trimmedValue.endsWith("'");
+
+  if (hasWrappedDoubleQuotes || hasWrappedSingleQuotes) {
+    return trimmedValue.slice(1, -1).trim();
+  }
+
+  return trimmedValue;
+}
+
 function escapeHtml(value: string) {
   return value
     .replaceAll("&", "&amp;")
@@ -81,9 +97,14 @@ export const prerender = false;
 export const POST: APIRoute = async ({ request, clientAddress }) => {
   try {
     const resendApiKey = import.meta.env.RESEND_API_KEY;
-    const resendFromEmail = import.meta.env.RESEND_FROM_EMAIL?.trim();
+    const resendFromEmail = normalizeEnvValue(import.meta.env.RESEND_FROM_EMAIL);
 
     if (!resendApiKey || !resendFromEmail) {
+      return gatewayFailure(deliveryUnavailableMessage(), 503, "gateway_misconfigured");
+    }
+
+    if (!RESEND_FROM_EMAIL_PATTERN.test(resendFromEmail)) {
+      console.error("Invalid RESEND_FROM_EMAIL value:", resendFromEmail);
       return gatewayFailure(deliveryUnavailableMessage(), 503, "gateway_misconfigured");
     }
 
