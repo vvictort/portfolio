@@ -106,9 +106,11 @@ Notes:
 
 ## Deployment Note
 
-This project uses Astro in `server` output mode with the Node adapter because the contact form depends on an API route.
+This project uses Astro in `server` output mode with the Vercel serverless adapter because the contact form depends on an API route.
 
-That means this is not a purely static deployment. To keep contact delivery working, it should be deployed to a Node-compatible environment.
+The repository also includes a `vercel.json` so the framework and build commands are explicit in version control.
+
+This is not a purely static deployment. To keep contact delivery working, it should be deployed to Vercel or another environment using the matching Astro adapter.
 
 ## A Few Implementation Details I Care About
 
