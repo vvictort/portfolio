@@ -2,7 +2,7 @@
   {
     "code": "HTC",
     "context": "Hack The Coast 2026",
-    "gate": "C3",
+    "gate": "C6",
     "status": "LANDED",
     "title": "Lullalink",
     "date": "2026-02-07",
@@ -29,7 +29,13 @@
     "date": "2026-01-25",
     "category": "Web App",
     "description": "MediCare+ is a health navigation platform built for the TELUS + TECHNATION hackathon that helps Canadian patients understand their own medical records. Users upload prescriptions or medical PDFs, which get digitized via OCR and processed by an AI that translates clinical jargon into plain-language summaries — along with a personalized list of questions to bring to their next appointment. Built with Next.js, Node/Express, MongoDB, and a separate Python service for document parsing, with Firebase ensuring each patient's data stays strictly private and isolated.",
-    "tags": ["Vite", "React/TS", "Tailwind CSS", "Firebase Auth", "Gemini API"],
+    "tags": [
+      "Vite",
+      "React/TS",
+      "Tailwind CSS",
+      "Firebase Auth",
+      "Gemini API"
+    ],
     "github": "https://github.com/vvictort/telustech-2026"
   },
   {
@@ -41,7 +47,15 @@
     "date": "2026-01-18",
     "category": "Web App",
     "description": "PlayItForward is a community platform built at nwHacks 2026 that lets families donate, browse, and request pre-loved toys — reducing toy waste while connecting those who have with those who need. The core feature is an AI-powered donation flow where a user simply uploads a photo of a toy and Google Gemini automatically classifies it, making listings effortless. The app is built with React and Vite on the frontend, an Express/TypeScript backend, Snowflake as the database, and Firebase for authentication — all tied together with a clean neumorphic UI and smooth animations.",
-    "tags": ["Vite", "React/TS", "Node/Express", "Tailwind CSS", "Snowflake", "Firebase Auth", "Gemini API"],
+    "tags": [
+      "Vite",
+      "React/TS",
+      "Node/Express",
+      "Tailwind CSS",
+      "Snowflake",
+      "Firebase Auth",
+      "Gemini API"
+    ],
     "github": "https://github.com/vvictort/htc-2026",
     "live": "http://playitfwd.tech:5173/"
   },
@@ -54,7 +68,13 @@
     "date": "2025-10-04",
     "category": "Web App",
     "description": "Carbon Compass is an interactive web application that empowers users to reduce their environmental impact through informed transportation choices. Simply enter your origin and destination, and our app will show you multiple route options with their respective carbon footprints, helping you choose the most sustainable way to travel.",
-    "tags": ["Vite", "React/TS", "Tailwind CSS", "JavaScript", "Google Cloud APIs"],
+    "tags": [
+      "Vite",
+      "React/TS",
+      "Tailwind CSS",
+      "JavaScript",
+      "Google Cloud APIs"
+    ],
     "github": "https://github.com/ExxML/CarbonCompass",
     "live": "https://carboncompass.vercel.app/"
   },
@@ -67,7 +87,14 @@
     "date": "2025-02-27",
     "category": "Data Analytics",
     "description": "Peak Mountain Resort is a data science project built for the Bolt Bootcamp 2026 case competition that analyzes guest review data to surface actionable insights for a fictional mountain resort. It applies sentiment scoring and topic modelling using Google Cloud's Natural Language API and Vertex AI, combining TF-IDF and LDA to classify reviews into meaningful themes. The pipeline pulls raw data from Google Cloud Storage and outputs structured results, helping identify what guests love, what they complain about, and where operational improvements should be focused.",
-    "tags": ["Python", "scikit-learn", "NLP", "LDA", "Sentiment Analysis", "Topic Modelling"],
+    "tags": [
+      "Python",
+      "scikit-learn",
+      "NLP",
+      "LDA",
+      "Sentiment Analysis",
+      "Topic Modelling"
+    ],
     "github": "https://github.com/vvictort/ubc-bolt-2025"
   },
   {
@@ -79,7 +106,13 @@
     "date": "2024-10-04",
     "category": "Data Analytics",
     "description": "This project investigates how player age relates to gaming engagement using real-world data from the PLAI Lab at UBC. The goal is to identify which age groups contribute the most playtime, helping the PLAICraft Research Team prioritize data collection for AI research. The analysis uses R with a KNN regression model, evaluated via 10-fold cross-validation and RMSPE.",
-    "tags": ["R", "Statistics", "KNN", "RMSPE", "ggplot2"],
+    "tags": [
+      "R",
+      "Statistics",
+      "KNN",
+      "RMSPE",
+      "ggplot2"
+    ],
     "github": "https://github.com/vvictort/plaicraft_knn_prediction"
   }
 ]
