@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { motion } from "framer-motion";
 
 // ── Data ───────────────────────────────────────────
 interface Flight {
@@ -32,11 +33,11 @@ const WELCOME: Flight[] = [
   { time: "", flight: "", iata: "", destination: "PORTFOLIO", gate: "", remarks: "" },
   { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
   { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
-  { time: "I", flight: "BUILD", iata: "", destination: "", gate: "", remarks: "SOFTWARE" },
+  { time: "HOWDY", flight: "", iata: "", destination: "", gate: "", remarks: "" },
+  { time: "", flight: "THANKS", iata: "", destination: "FOR", gate: "", remarks: "" },
+  { time: "", flight: "", iata: "", destination: "STOPPING", gate: "", remarks: "BY" },
   { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
-  { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
-  { time: "", flight: "", iata: "", destination: "EXPLORE", gate: "MY", remarks: "WORK" },
-  { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
+  { time: "", flight: "", iata: "", destination: "VIEW", gate: "MY", remarks: "WORK" },
   { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
 ];
 
@@ -44,19 +45,23 @@ const WELCOME_MOBILE: Flight[] = [
   { time: "", flight: "", iata: "", destination: "WELCOME TO MY", gate: "", remarks: "" },
   { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
   { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
-  { time: "", flight: "", iata: "", destination: "PORTFOLIO", gate: "", remarks: "" },
+  { time: "PORT", flight: "FOLIO", iata: "", destination: "", gate: "", remarks: "" },
   { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
   { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
-  { time: "I", flight: "BUILD", iata: "", destination: "SOFTWARE", gate: "", remarks: "" },
+  { time: "HOWDY", flight: "", iata: "", destination: "", gate: "", remarks: "" },
+  { time: "", flight: "THANKS", iata: "", destination: "FOR", gate: "", remarks: "" },
+  { time: "", flight: "", iata: "", destination: "STOPPING BY", gate: "", remarks: "" },
   { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
-  { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
-  { time: "", flight: "", iata: "", destination: "VIEW MY WORK", gate: "", remarks: "" },
-  { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
+  { time: "VIEW", flight: "MY", iata: "", destination: "WORK", gate: "", remarks: "" },
   { time: "", flight: "", iata: "", destination: "", gate: "", remarks: "" },
 ];
 
 const FLIP = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 const rand = () => FLIP[Math.floor(Math.random() * FLIP.length)];
+const INITIAL_SWITCH_DELAY_MS = 2500;
+const LOOP_INTERVAL_MS = 6000;
+const FLIP_RESET_DELAY_MS = 1200;
+const ROW_STAGGER_DELAY_MS = 60;
 
 interface FlapFieldProps {
   value: string;
@@ -136,15 +141,15 @@ export const FlightBoard: React.FC = () => {
   useEffect(() => {
     let showingWelcome = false;
 
-    // Initial jump to welcome text after 4s
+    // Initial jump to welcome text after a shorter delay
     const initialTimeout = setTimeout(() => {
       setFlip(true);
       setData(welcomeRows);
       showingWelcome = true;
-      setTimeout(() => setFlip(false), 1500);
-    }, 4000);
+      setTimeout(() => setFlip(false), FLIP_RESET_DELAY_MS);
+    }, INITIAL_SWITCH_DELAY_MS);
 
-    // Then continuously loop every 8 seconds
+    // Then continuously loop a bit faster
     const interval = setInterval(() => {
       setFlip(true);
       if (showingWelcome) {
@@ -153,8 +158,8 @@ export const FlightBoard: React.FC = () => {
         setData(welcomeRows);
       }
       showingWelcome = !showingWelcome;
-      setTimeout(() => setFlip(false), 1500);
-    }, 8000);
+      setTimeout(() => setFlip(false), FLIP_RESET_DELAY_MS);
+    }, LOOP_INTERVAL_MS);
 
     return () => {
       clearTimeout(initialTimeout);
@@ -165,9 +170,24 @@ export const FlightBoard: React.FC = () => {
   return (
     <div className="fb">
       <div className="fb-header">
-        <h1>
-          Departures <span className="fb-arrow">↗</span>
-        </h1>
+        <motion.h1
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}>
+          <motion.span
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.25, ease: "easeOut" }}>
+            Departures
+          </motion.span>{" "}
+          <motion.span
+            className="fb-arrow"
+            initial={{ opacity: 0, x: -6 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.35, ease: "easeOut" }}>
+            ↗
+          </motion.span>
+        </motion.h1>
       </div>
 
       {/* Scrollable container for mobile */}
@@ -184,12 +204,12 @@ export const FlightBoard: React.FC = () => {
           {/* Data rows: each FlapField is a grid cell */}
           {data.map((f, i) => (
             <React.Fragment key={i}>
-              <FlapField value={f.time} width={5} scramble={flip} delay={i * 80} />
-              <FlapField value={f.flight} width={6} scramble={flip} delay={i * 80 + 25} />
-              <FlapField value={f.iata} width={3} color="#facc15" scramble={flip} delay={i * 80 + 50} />
-              <FlapField value={f.destination} width={13} scramble={flip} delay={i * 80 + 75} />
-              <FlapField value={f.gate} width={3} scramble={flip} delay={i * 80 + 100} />
-              <FlapField value={f.remarks} width={8} color={remColor(f.remarks)} scramble={flip} delay={i * 80 + 125} />
+              <FlapField value={f.time} width={5} scramble={flip} delay={i * ROW_STAGGER_DELAY_MS} />
+              <FlapField value={f.flight} width={6} scramble={flip} delay={i * ROW_STAGGER_DELAY_MS + 20} />
+              <FlapField value={f.iata} width={3} color="#facc15" scramble={flip} delay={i * ROW_STAGGER_DELAY_MS + 40} />
+              <FlapField value={f.destination} width={13} scramble={flip} delay={i * ROW_STAGGER_DELAY_MS + 60} />
+              <FlapField value={f.gate} width={3} scramble={flip} delay={i * ROW_STAGGER_DELAY_MS + 80} />
+              <FlapField value={f.remarks} width={8} color={remColor(f.remarks)} scramble={flip} delay={i * ROW_STAGGER_DELAY_MS + 100} />
             </React.Fragment>
           ))}
         </div>

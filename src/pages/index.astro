@@ -8,16 +8,15 @@ import { DestinationsSection } from '../components/sections/DestinationsSection'
 import { BeyondCodeSection } from '../components/sections/BeyondCodeSection';
 import { ContactSection } from '../components/sections/ContactSection';
 import { ArrivalsSection } from '../components/sections/ArrivalsSection';
-import { SmoothScroll } from '../components/layout/SmoothScroll';
 import { BackgroundCosmetics } from '../components/ui/BackgroundCosmetics';
 import { HeroStars } from '../components/ui/HeroStars';
+import { ScrollToStartButton } from '../components/ui/ScrollToStartButton';
 
 import projectsData from '../data/projects.json';
 const projects = [...projectsData].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 ---
 
 <MainLayout title="Victor Thai | Portfolio">
-	<SmoothScroll client:load>
 		<BackgroundCosmetics client:load />
 		<Navigation client:load />
 
@@ -26,13 +25,9 @@ const projects = [...projectsData].sort((a, b) => new Date(b.date).getTime() - n
 			<section id="departures" class="min-h-screen w-full relative flex text-white flex-col items-center justify-center overflow-hidden">
 			<HeroStars client:load />
 			<div class="w-full max-w-6xl mx-auto px-8 relative z-10">
-                <FlightBoard client:idle />
+                <FlightBoard client:load />
             </div>
-            <a href="#about" class="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-0.5 text-zinc-500 hover:text-white transition-colors font-mono text-sm animate-pulse cursor-pointer group z-20">
-                <span class="tracking-widest">SCROLL TO BOARD</span>
-                <span class="text-xl transition-transform group-hover:translate-y-1 mt-[-4px]">⌄</span>
-            </a>
-            </div>
+            <ScrollToStartButton client:load />
 		</section>
 
 		{/* A1: About Section */}
@@ -56,7 +51,7 @@ const projects = [...projectsData].sort((a, b) => new Date(b.date).getTime() - n
 		</section>
 
         {/* E5: Contact Section */}
-		<section class="min-h-screen w-full relative flex items-center justify-center py-20">
+		<section id="contact" class="min-h-screen w-full relative flex items-center justify-center py-20">
 			<ContactSection client:idle />
 		</section>
 
@@ -65,22 +60,4 @@ const projects = [...projectsData].sort((a, b) => new Date(b.date).getTime() - n
 			<ArrivalsSection client:idle />
 		</section>
 		</main>
-	</SmoothScroll>
 </MainLayout>
-<style>
-	html.lenis, html.lenis body {
-		height: auto;
-	}
-	.lenis.lenis-smooth {
-		scroll-behavior: auto !important;
-	}
-	.lenis.lenis-smooth [data-lenis-prevent] {
-		overscroll-behavior: contain;
-	}
-	.lenis.lenis-stopped {
-		overflow: hidden;
-	}
-	.lenis.lenis-smooth iframe {
-		pointer-events: none;
-	}
-</style>

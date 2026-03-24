@@ -34,7 +34,7 @@ export function BeyondCodeSection() {
         viewport={{ once: true, margin: "-100px" }}
         className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
         {[
-          { icon: Mountain, label: "Outdoors", desc: "Hiking the local trails", href: "/outdoor" },
+          { icon: Mountain, label: "Outdoors", desc: "Touching grass activities", href: "/outdoor" },
           { icon: UtensilsCrossed, label: "Food", desc: "Trying new spots and dishes", href: "/food" },
         ].map((item, i) => (
           <motion.a

@@ -1,5 +1,4 @@
 import React from "react";
-import { Plane, ArrowRight } from "lucide-react";
 import { cn } from "../../utils";
 import { motion } from "framer-motion";
 import { InteractiveMap } from "../ui/InteractiveMap";
@@ -76,7 +75,6 @@ export function JourneySection() {
         </div>
       </motion.div>
 
-      {/* Flight Log Timeline */}
       <motion.div
         variants={containerVars}
         initial="hidden"
@@ -95,7 +93,6 @@ export function JourneySection() {
           <h2 className="text-5xl font-bold tracking-tight text-white mb-12">Flight Path</h2>
         </div>
 
-        {/* Custom Interactive Map visual */}
         <div className="mt-8">
           <InteractiveMap />
         </div>

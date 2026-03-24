@@ -20,6 +20,7 @@ const galleryLinks = [
 export function Navigation() {
   const [activeSection, setActiveSection] = useState("departures");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [hoveredPath, setHoveredPath] = useState<string | null>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -30,7 +31,11 @@ export function Navigation() {
           }
         });
       },
-      { threshold: 0.5 },
+      {
+        // Use a margin to detect the section in the center/top of the viewport
+        rootMargin: "-20% 0px -70% 0px",
+        threshold: 0,
+      },
     );
 
     document.querySelectorAll("section[id]").forEach((section) => {
@@ -47,6 +52,27 @@ export function Navigation() {
       document.body.style.overflow = "auto";
     }
   }, [isMobileMenuOpen]);
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    const isHome =
+      window.location.pathname === "/" ||
+      window.location.pathname === "" ||
+      window.location.pathname.endsWith("/index.html");
+
+    // If it's a hash link and we're on the home page
+    if (isHome && href.startsWith("/#")) {
+      const id = href.split("#")[1];
+      const element = document.getElementById(id);
+      if (element) {
+        e.preventDefault();
+        element.scrollIntoView({ behavior: "smooth" });
+        setIsMobileMenuOpen(false);
+      }
+    } else {
+      // For any other link (or we're on a subpage), allow default behavior
+      setIsMobileMenuOpen(false);
+    }
+  };
 
   return (
     <>
@@ -83,37 +109,56 @@ export function Navigation() {
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
             className="hidden md:flex items-center gap-1 p-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
             {navLinks.map((link) => {
-              const isActive = activeSection === link.href.substring(1);
+              const isActive = activeSection === link.href.split("#")[1];
+              const isHovered = hoveredPath === link.href;
+
               return (
-                <a
+                <motion.a
+                  layout
                   key={link.href}
                   href={link.href}
+                  onMouseEnter={() => setHoveredPath(link.href)}
+                  onMouseLeave={() => setHoveredPath(null)}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className={cn(
-                    "relative flex items-center justify-center px-4 py-2 rounded-full transition-colors duration-300 overflow-hidden group",
-                    isActive ? "text-primary" : "text-zinc-400 hover:text-white hover:bg-white/5",
-                  )}>
+                    "relative flex items-center justify-center px-4 py-2 rounded-full overflow-hidden group",
+                    isActive ? "text-primary" : "text-zinc-400 hover:text-white",
+                  )}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}>
+                  {/* Hover Bubble */}
+                  {isHovered && !isActive && (
+                    <motion.div
+                      layoutId="nav-hover"
+                      className="absolute inset-0 bg-white/5 rounded-full"
+                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                    />
+                  )}
+
+                  {/* Active Indicator */}
                   {isActive && (
                     <motion.div
                       layoutId="nav-pill"
                       className="absolute inset-0 bg-primary/10 rounded-full"
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
                     />
                   )}
-                  <span className="relative z-10 flex items-center gap-2 font-mono text-xs font-semibold tracking-widest">
+                  <div className="relative z-10 flex items-center gap-2 font-mono text-xs font-semibold tracking-widest">
                     <span>{link.label}</span>
-                    <AnimatePresence>
+                    <AnimatePresence mode="popLayout">
                       {isActive && (
                         <motion.span
-                          initial={{ opacity: 0, width: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, width: "auto", scale: 1 }}
-                          exit={{ opacity: 0, width: 0, scale: 0.8 }}
-                          className="flex items-center text-[9px] bg-primary/20 text-primary px-1.5 py-0.5 rounded-sm whitespace-nowrap overflow-hidden">
+                          layout
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.9 }}
+                          className="flex items-center text-[9px] bg-primary/20 text-primary px-1.5 py-0.5 rounded-sm whitespace-nowrap overflow-hidden"
+                          transition={{ type: "spring", stiffness: 500, damping: 30 }}>
                           G-{link.gate}
                         </motion.span>
                       )}
                     </AnimatePresence>
-                  </span>
-                </a>
+                  </div>
+                </motion.a>
               );
             })}
           </motion.div>
@@ -141,64 +186,66 @@ export function Navigation() {
             {/* Background Texture/Grid */}
             <div className="absolute inset-0 bg-airport-grid opacity-20 pointer-events-none" />
 
-            <div className="flex flex-col px-8 relative z-10 overflow-y-auto pb-12">
+            <div className="flex flex-col px-8 relative z-10 overflow-y-auto scrollbar-hide pb-12">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="flex items-center justify-between mb-12">
+                className="flex items-center justify-between mb-12 pr-20">
                 <div className="flex flex-col">
                   <span className="text-[10px] font-mono text-zinc-500 tracking-[0.3em] uppercase mb-1">
                     TERMINAL 1
                   </span>
                   <span className="text-2xl font-mono font-bold text-white tracking-widest">DEPARTURES</span>
                 </div>
-                <div className="w-12 h-px bg-primary/30" />
+                <div className="hidden sm:block w-12 h-px bg-primary/30" />
               </motion.div>
 
               {/* Main Nav */}
-              {navLinks.map((link, i) => {
-                const isActive = activeSection === link.href.split("#")[1];
-                return (
-                  <motion.a
-                    initial={{ opacity: 0, x: -30, filter: "blur(8px)" }}
-                    animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, x: -20, filter: "blur(4px)" }}
-                    transition={{ delay: 0.1 + i * 0.05, duration: 0.5, ease: "easeOut" }}
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={cn(
-                      "group relative flex items-center justify-between p-5 rounded-2xl transition-all duration-300 transform-gpu backface-hidden",
-                      isActive
-                        ? "bg-primary/10 text-primary border border-primary/30 shadow-[0_0_20px_rgba(250,204,21,0.05)]"
-                        : "bg-white/3 text-zinc-400 border border-white/5 hover:bg-white/5 hover:text-white",
-                    )}>
-                    <div className="flex flex-col gap-1">
-                      <span
-                        className={cn(
-                          "font-mono text-[9px] tracking-[0.2em] mb-1 font-bold",
-                          isActive ? "text-primary" : "text-zinc-600",
-                        )}>
-                        GATE {link.gate}
-                      </span>
-                      <span className="text-xl font-mono font-bold tracking-widest uppercase">{link.label}</span>
-                    </div>
-                    <ChevronRight className={cn("w-4 h-4", isActive ? "text-primary" : "text-zinc-800")} />
-                  </motion.a>
-                );
-              })}
+              <div className="flex flex-col gap-2">
+                {navLinks.map((link, i) => {
+                  const isActive = activeSection === link.href.split("#")[1];
+                  return (
+                    <motion.a
+                      initial={{ opacity: 0, x: -30, filter: "blur(8px)" }}
+                      animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                      exit={{ opacity: 0, x: -20, filter: "blur(4px)" }}
+                      transition={{ delay: 0.1 + i * 0.05, duration: 0.5, ease: "easeOut" }}
+                      key={link.href}
+                      href={link.href}
+                      onClick={(e) => handleNavClick(e, link.href)}
+                      className={cn(
+                        "group relative flex items-center justify-between p-5 rounded-2xl transition-all duration-300 transform-gpu backface-hidden",
+                        isActive
+                          ? "bg-primary/10 text-primary border border-primary/30 shadow-[0_0_20px_rgba(250,204,21,0.05)]"
+                          : "bg-white/3 text-zinc-400 border border-white/5 hover:bg-white/5 hover:text-white",
+                      )}>
+                      <div className="flex flex-col gap-1">
+                        <span
+                          className={cn(
+                            "font-mono text-[9px] tracking-[0.2em] mb-1 font-bold",
+                            isActive ? "text-primary" : "text-zinc-600",
+                          )}>
+                          GATE {link.gate}
+                        </span>
+                        <span className="text-xl font-mono font-bold tracking-widest uppercase">{link.label}</span>
+                      </div>
+                      <ChevronRight className={cn("w-4 h-4", isActive ? "text-primary" : "text-zinc-800")} />
+                    </motion.a>
+                  );
+                })}
+              </div>
 
               {/* Discovery Logs Divider */}
-              <div className="flex items-center gap-4 my-4 px-4 overflow-hidden">
-                <span className="text-[8px] font-mono text-zinc-600 tracking-[0.5em] uppercase whitespace-nowrap">
+              <div className="flex items-center gap-4 my-4 px-4">
+                <span className="shrink-0 text-[9px] leading-none font-mono text-zinc-500 tracking-[0.45em] uppercase whitespace-nowrap">
                   Discovery Logs
                 </span>
                 <div className="flex-1 h-px bg-white/5" />
               </div>
 
               {/* Gallery Nav */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 {galleryLinks.map((link, i) => (
                   <motion.a
                     initial={{ opacity: 0, y: 10 }}

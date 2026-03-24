@@ -1,6 +1,5 @@
 import React from "react";
 import { Plane, MapPin, GraduationCap, Code, Timer } from "lucide-react";
-import { cn } from "../../utils";
 import { motion } from "framer-motion";
 
 export function AboutSection() {
@@ -21,7 +20,6 @@ export function AboutSection() {
 
   return (
     <div className="w-full max-w-6xl mx-auto px-8 py-20 flex flex-col gap-8">
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -38,11 +36,9 @@ export function AboutSection() {
         whileInView="show"
         viewport={{ once: true, margin: "-100px" }}
         className="flex flex-col gap-8">
-        {/* Boarding Pass */}
         <motion.div
           variants={itemVars}
           className="w-full bg-[#050505]/80 backdrop-blur-xl border border-white/10 rounded-3xl flex flex-col p-8 relative overflow-hidden shadow-2xl group transform-gpu backface-hidden will-change-[transform,opacity]">
-          {/* Background Decor */}
           <div
             className="absolute inset-0 opacity-20 pointer-events-none"
             style={{
@@ -52,7 +48,6 @@ export function AboutSection() {
           />
           <div className="absolute right-0 top-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
-          {/* Pass Top row: YVR ...DEV */}
           <div className="flex flex-col md:flex-row items-center justify-between mb-8 relative z-10 gap-8 md:gap-0">
             <div className="flex flex-col text-center md:text-left">
               <span className="text-5xl md:text-6xl font-mono font-bold tracking-wider text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]">
@@ -107,7 +102,6 @@ export function AboutSection() {
             </div>
           </div>
 
-          {/* Pass Bottom info */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 relative z-10 bg-black/40 p-6 rounded-2xl border border-white/5">
             <div className="flex flex-col gap-1.5">
               <span className="text-zinc-500 font-mono text-[10px] tracking-widest uppercase">Passenger</span>
@@ -128,7 +122,6 @@ export function AboutSection() {
           </div>
         </motion.div>
 
-        {/* Info Cards */}
         <motion.div variants={itemVars} className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[
             { icon: MapPin, label: "Location", value: "Vancouver, BC" },
@@ -146,10 +139,9 @@ export function AboutSection() {
           ))}
         </motion.div>
 
-        {/* Text block */}
         <motion.div
           variants={itemVars}
-          className="flex flex-col gap-6 mt-4 text-zinc-400 max-w-3xl text-lg leading-relaxed">
+          className="flex flex-col gap-6 mt-4 text-zinc-400 text-lg leading-relaxed">
           <p>
             Hey there! I'm Victor, a third-year Computer Science student at the University of British Columbia. I'm
             passionate about building software that makes a difference - from full-stack web applications to machine

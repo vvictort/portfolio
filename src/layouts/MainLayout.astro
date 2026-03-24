@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { SmoothScroll } from "../components/layout/SmoothScroll";
 
 interface Props {
   title: string;
@@ -21,6 +22,24 @@ const {
     <meta name="description" content={description} />
   </head>
   <body class="min-h-screen bg-bg text-fg">
+    <SmoothScroll client:load />
     <slot />
+    <style>
+      html.lenis, html.lenis body {
+        height: auto;
+      }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+      .lenis.lenis-smooth [data-lenis-prevent] {
+        overscroll-behavior: contain;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+      .lenis.lenis-smooth iframe {
+        pointer-events: none;
+      }
+    </style>
   </body>
 </html>

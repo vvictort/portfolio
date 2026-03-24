@@ -1,24 +1,108 @@
 {
   "outdoor": [
     {
-      "id": "exp-1",
-      "title": "Mountain Peak",
-      "location": "Vancouver, BC",
-      "coordinates": "49.2827° N, 123.1207° W",
-      "date": "2024-05-15",
-      "image": "/photography/outdoor/placeholder.webp",
-      "altitude": "1250m"
+      "id": "outdoor-20251223",
+      "title": "Ski Trip 2025",
+      "location": "Sunshine Village, Banff",
+      "coordinates": "51.0924, -115.7667",
+      "date": "2025-12-23",
+      "images": [
+        "/photography/outdoor/20251223_093938.webp",
+        "/photography/outdoor/20251223_154952.webp",
+        "/photography/outdoor/20251223_172322.webp"
+      ],
+      "altitude": "2134m (7000ft)"
+    },
+    {
+      "id": "outdoor-20251101",
+      "title": "End of Fall",
+      "location": "UBC ICICS",
+      "coordinates": "49.26, -123.25",
+      "date": "2025-11-01",
+      "images": [
+        "/photography/outdoor/20251101_171947.webp"
+      ],
+      "altitude": "100m (328ft)"
+    },
+    {
+      "id": "outdoor-20251021",
+      "title": "During Fall",
+      "location": "UBC Koerner Library",
+      "coordinates": "49.26, -123.25",
+      "date": "2025-10-21",
+      "images": [
+        "/photography/outdoor/20251021_173106.webp"
+      ],
+      "altitude": "100m (328ft)"
+    },
+    {
+      "id": "outdoor-20251013",
+      "title": "Start of Fall",
+      "location": "UBC ICICS",
+      "coordinates": "49.26, -123.25",
+      "date": "2025-10-13",
+      "images": [
+        "/photography/outdoor/20251013_133714.webp"
+      ],
+      "altitude": "100m (328ft)"
+    },
+    {
+      "id": "outdoor-20250929",
+      "title": "Rainbowwww",
+      "location": "UBC IKB Library",
+      "coordinates": "49.26, -123.25",
+      "date": "2025-09-29",
+      "images": [
+        "/photography/outdoor/20250929_184610.webp"
+      ],
+      "altitude": "100m (328ft)"
     }
   ],
   "food": [
     {
-      "id": "menu-1",
-      "title": "Local Ramen",
-      "location": "Downtown, Vancouver",
-      "coordinates": "49.2856° N, 123.1115° W",
-      "date": "2024-06-20",
-      "image": "/photography/food/placeholder.webp",
-      "dish": "Tonkotsu Special"
+      "id": "food-20251210",
+      "title": "Ramen Yummm",
+      "location": "Kinton Ramen",
+      "coordinates": "49.26, -123.25",
+      "date": "2025-12-10",
+      "images": [
+        "/photography/food/20251210_172453.webp"
+      ],
+      "dish": "Idk T-T"
+    },
+    {
+      "id": "food-20251206",
+      "title": "Motherland",
+      "location": "Pho 37",
+      "coordinates": "--",
+      "date": "2025-12-06",
+      "images": [
+        "/photography/food/20251206_172348.webp"
+      ],
+      "dish": "Bun Thit Nuong"
+    },
+    {
+      "id": "food-20251005",
+      "title": "Fully Stacked Uni Student",
+      "location": "SFU",
+      "coordinates": "49.2768, -122.9180",
+      "date": "2025-10-05",
+      "images": [
+        "/photography/food/20251005_113811.webp"
+      ],
+      "dish": "Indomie"
+    },
+    {
+      "id": "food-20251003",
+      "title": "Homecooked Goodness",
+      "location": "Location TBD",
+      "coordinates": "--",
+      "date": "2025-10-03",
+      "images": [
+        "/photography/food/20251003_200806.webp",
+        "/photography/food/20251003_213422.webp"
+      ],
+      "dish": "Too much to list"
     }
   ]
 }

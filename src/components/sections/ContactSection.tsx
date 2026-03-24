@@ -2,7 +2,25 @@ import React, { useState } from "react";
 import { Send, FileText, ExternalLink, PlaneTakeoff, User, Mail, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
 
+type FormState = {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+};
+
+type FormErrors = Partial<Record<keyof FormState, string>>;
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export function ContactSection() {
+  const initialFormState: FormState = {
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  };
+
   const containerVars = {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { staggerChildren: 0.15 } },
@@ -12,17 +30,107 @@ export function ContactSection() {
     show: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.5 } },
   };
 
-  const [formState, setFormState] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
+  const [formState, setFormState] = useState(initialFormState);
+  const [fieldErrors, setFieldErrors] = useState<FormErrors>({});
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [submitMessage, setSubmitMessage] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateField = (field: keyof FormState, value: string) => {
+    const trimmedValue = value.trim();
+
+    if (field === "name" && !trimmedValue) return "Your name is required.";
+    if (field === "email") {
+      if (!trimmedValue) return "Your email is required.";
+      if (!EMAIL_PATTERN.test(trimmedValue)) return "Please enter a valid email address.";
+    }
+    if (field === "message" && !trimmedValue) return "A message is required.";
+
+    return "";
+  };
+
+  const validateForm = (state: FormState) => {
+    const nextErrors: FormErrors = {};
+
+    (["name", "email", "message"] as const).forEach((field) => {
+      const error = validateField(field, state[field]);
+      if (error) nextErrors[field] = error;
+    });
+
+    return nextErrors;
+  };
+
+  const updateField = (field: keyof FormState, value: string) => {
+    setFormState((current) => ({ ...current, [field]: value }));
+    setFieldErrors((current) => {
+      if (!current[field]) return current;
+
+      const nextErrors = { ...current };
+      const error = validateField(field, value);
+
+      if (error) nextErrors[field] = error;
+      else delete nextErrors[field];
+
+      return nextErrors;
+    });
+  };
+
+  const handleBlur = (field: keyof FormState) => {
+    setFieldErrors((current) => {
+      const nextErrors = { ...current };
+      const error = validateField(field, formState[field]);
+
+      if (error) nextErrors[field] = error;
+      else delete nextErrors[field];
+
+      return nextErrors;
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // In a real app, wire up to Formspree, EmailJS, or similar.
-    alert("Transmission sent successfully! (Demo mode)");
+
+    if (submitStatus === "submitting") return;
+
+    const nextErrors = validateForm(formState);
+    if (Object.keys(nextErrors).length > 0) {
+      setFieldErrors(nextErrors);
+      setSubmitStatus("error");
+      setSubmitMessage("Please fix the highlighted fields.");
+      return;
+    }
+
+    setSubmitStatus("submitting");
+    setSubmitMessage("");
+    setFieldErrors({});
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formState),
+      });
+
+      const data = (await response.json().catch(() => null)) as
+        | { message?: string; fieldErrors?: FormErrors }
+        | null;
+
+      if (!response.ok) {
+        if (data?.fieldErrors) {
+          setFieldErrors(data.fieldErrors);
+        }
+        throw new Error(data?.message || "Unable to send your message right now.");
+      }
+
+      setFormState(initialFormState);
+      setFieldErrors({});
+      setSubmitStatus("success");
+      setSubmitMessage(data?.message || "Transmission sent successfully.");
+    } catch (error) {
+      setSubmitStatus("error");
+      setSubmitMessage(error instanceof Error ? error.message : "Unable to send your message right now.");
+    }
   };
 
   return (
@@ -50,14 +158,11 @@ export function ContactSection() {
         whileInView="show"
         viewport={{ once: true, margin: "-100px" }}
         className="grid grid-cols-1 lg:grid-cols-5 gap-6 md:gap-8">
-        {/* Contact Form (Left Side, 3 cols wide) */}
         <motion.div
           variants={itemVars}
           className="lg:col-span-3 bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 md:p-8 flex flex-col relative overflow-hidden group h-full">
-          {/* Background subtle effect */}
           <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-          {/* Form Header */}
           <div className="flex items-center justify-between pb-6 border-b border-white/5 mb-6">
             <div className="flex items-center gap-2 text-primary font-mono text-xs font-bold tracking-widest uppercase">
               <Send className="w-4 h-4" />
@@ -66,29 +171,43 @@ export function ContactSection() {
             <span className="font-mono text-[10px] tracking-widest text-zinc-500 uppercase">MSG-2026</span>
           </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4 relative z-10 font-mono text-sm flex-1 min-h-0">
+          <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4 relative z-10 font-mono text-sm flex-1 min-h-0">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="relative group">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-primary transition-colors" />
-                <input
-                  type="text"
-                  required
-                  placeholder="Your Name *"
-                  className="w-full bg-[#111] border border-white/10 rounded-lg py-3 pl-11 pr-4 text-white placeholder:text-zinc-600 focus:outline-none focus:border-primary/50 transition-colors"
-                  value={formState.name}
-                  onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                />
+              <div className="flex flex-col gap-2">
+                <div className="relative group">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-primary transition-colors" />
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Your Name *"
+                    aria-invalid={Boolean(fieldErrors.name)}
+                    className={`w-full bg-[#111] border rounded-lg py-3 pl-11 pr-4 text-white placeholder:text-zinc-600 focus:outline-none transition-colors ${
+                      fieldErrors.name ? "border-red-500/60 focus:border-red-500/80" : "border-white/10 focus:border-primary/50"
+                    }`}
+                    value={formState.name}
+                    onChange={(e) => updateField("name", e.target.value)}
+                    onBlur={() => handleBlur("name")}
+                  />
+                </div>
+                <p className="min-h-[1.25rem] text-xs leading-relaxed text-red-400">{fieldErrors.name || ""}</p>
               </div>
-              <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-primary transition-colors" />
-                <input
-                  type="email"
-                  required
-                  placeholder="Email Address *"
-                  className="w-full bg-[#111] border border-white/10 rounded-lg py-3 pl-11 pr-4 text-white placeholder:text-zinc-600 focus:outline-none focus:border-primary/50 transition-colors"
-                  value={formState.email}
-                  onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-                />
+              <div className="flex flex-col gap-2">
+                <div className="relative group">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-primary transition-colors" />
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email Address *"
+                    aria-invalid={Boolean(fieldErrors.email)}
+                    className={`w-full bg-[#111] border rounded-lg py-3 pl-11 pr-4 text-white placeholder:text-zinc-600 focus:outline-none transition-colors ${
+                      fieldErrors.email ? "border-red-500/60 focus:border-red-500/80" : "border-white/10 focus:border-primary/50"
+                    }`}
+                    value={formState.email}
+                    onChange={(e) => updateField("email", e.target.value)}
+                    onBlur={() => handleBlur("email")}
+                  />
+                </div>
+                <p className="min-h-[1.25rem] text-xs leading-relaxed text-red-400">{fieldErrors.email || ""}</p>
               </div>
             </div>
 
@@ -96,36 +215,53 @@ export function ContactSection() {
               <MessageSquare className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-primary transition-colors" />
               <input
                 type="text"
+                name="subject"
                 placeholder="Subject (optional)"
                 className="w-full bg-[#111] border border-white/10 rounded-lg py-3 pl-11 pr-4 text-white placeholder:text-zinc-600 focus:outline-none focus:border-primary/50 transition-colors"
                 value={formState.subject}
-                onChange={(e) => setFormState({ ...formState, subject: e.target.value })}
+                onChange={(e) => updateField("subject", e.target.value)}
               />
             </div>
 
-            <div className="relative group flex-1 min-h-[12rem]">
-              <textarea
-                required
-                placeholder="Your Message *"
-                rows={5}
-                className="w-full h-full min-h-[12rem] bg-[#111] border border-white/10 rounded-lg py-4 px-4 text-white placeholder:text-zinc-600 focus:outline-none focus:border-primary/50 transition-colors resize-none"
-                value={formState.message}
-                onChange={(e) => setFormState({ ...formState, message: e.target.value })}
-              />
+            <div className="flex flex-col gap-2 flex-1">
+              <div className="relative group flex-1">
+                <textarea
+                  name="message"
+                  placeholder="Your Message *"
+                  rows={5}
+                  aria-invalid={Boolean(fieldErrors.message)}
+                  className={`w-full min-h-[12rem] h-full bg-[#111] border rounded-lg py-4 px-4 text-white placeholder:text-zinc-600 focus:outline-none transition-colors resize-none ${
+                    fieldErrors.message
+                      ? "border-red-500/60 focus:border-red-500/80"
+                      : "border-white/10 focus:border-primary/50"
+                  }`}
+                  value={formState.message}
+                  onChange={(e) => updateField("message", e.target.value)}
+                  onBlur={() => handleBlur("message")}
+                />
+              </div>
+              <p className="min-h-[1.25rem] text-xs leading-relaxed text-red-400">{fieldErrors.message || ""}</p>
             </div>
 
             <button
               type="submit"
-              className="mt-4 lg:mt-auto w-full flex items-center justify-center gap-2 cursor-pointer bg-primary/90 hover:bg-primary text-black font-bold uppercase tracking-widest px-6 py-3 rounded-lg transition-all shadow-[0_0_15px_rgba(250,204,21,0.2)] hover:shadow-[0_0_20px_rgba(250,204,21,0.4)] hover:-translate-y-0.5">
+              disabled={submitStatus === "submitting"}
+              className="mt-2 lg:mt-auto w-full flex items-center justify-center gap-2 cursor-pointer bg-primary/90 hover:bg-primary text-black font-bold uppercase tracking-widest px-6 py-3 rounded-lg transition-all shadow-[0_0_15px_rgba(250,204,21,0.2)] hover:shadow-[0_0_20px_rgba(250,204,21,0.4)] hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0">
               <Send className="w-4 h-4" />
-              <span>SEND MESSAGE</span>
+              <span>{submitStatus === "submitting" ? "SENDING..." : "SEND MESSAGE"}</span>
             </button>
+
+            {submitMessage && (
+              <p
+                aria-live="polite"
+                className={`text-xs leading-relaxed ${submitStatus === "error" ? "text-red-400" : "text-green-400"}`}>
+                {submitMessage}
+              </p>
+            )}
           </form>
         </motion.div>
 
-        {/* Right Side Cards (2 cols wide) */}
         <div className="lg:col-span-2 flex flex-col gap-6 h-full">
-          {/* Resume Card */}
           <motion.div
             variants={itemVars}
             className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 md:p-8 flex flex-col relative overflow-hidden group shrink-0">
@@ -152,7 +288,6 @@ export function ContactSection() {
             </a>
           </motion.div>
 
-          {/* Flight Info Card */}
           <motion.div
             variants={itemVars}
             className="bg-[#0a0a0a] border border-white/5 rounded-2xl p-6 md:p-8 flex flex-col relative overflow-hidden group lg:flex-1">

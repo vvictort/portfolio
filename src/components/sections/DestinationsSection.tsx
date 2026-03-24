@@ -33,7 +33,6 @@ export function DestinationsSection({ projects }: Props) {
 
   return (
     <div className="w-full max-w-6xl mx-auto px-8 py-20 flex flex-col gap-8">
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -51,7 +50,6 @@ export function DestinationsSection({ projects }: Props) {
         </div>
       </motion.div>
 
-      {/* Grid */}
       <motion.div
         variants={containerVars}
         initial="hidden"
@@ -63,7 +61,6 @@ export function DestinationsSection({ projects }: Props) {
             variants={itemVars}
             key={i}
             className="group relative bg-[#050505]/80 backdrop-blur-xl border border-white/10 rounded-3xl hover:border-primary/30 transition-[border-color,box-shadow] duration-500 hover:shadow-[0_0_30px_rgba(250,204,21,0.1)] flex flex-col overflow-hidden h-full transform-gpu backface-hidden will-change-[transform,opacity]">
-            {/* Background Decor */}
             <div
               className="absolute inset-0 opacity-10 pointer-events-none"
               style={{
@@ -74,7 +71,6 @@ export function DestinationsSection({ projects }: Props) {
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none translate-x-1/3 -translate-y-1/3" />
             <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-            {/* Tech Header */}
             <div className="w-full px-8 py-4 border-b border-white/10 bg-white/5 flex items-center justify-between relative overflow-hidden z-10">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-xs tracking-widest text-white font-bold uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
@@ -86,7 +82,6 @@ export function DestinationsSection({ projects }: Props) {
               </span>
             </div>
 
-            {/* Project Details */}
             <div className="p-8 relative z-10 flex flex-col flex-1">
               <div className="flex items-center justify-between mb-8">
                 <span className="text-primary font-mono text-xs font-bold tracking-widest uppercase bg-primary/10 px-3 py-1 rounded-sm border border-primary/20">
@@ -139,7 +134,6 @@ export function DestinationsSection({ projects }: Props) {
                 ))}
               </div>
 
-              {/* Actions */}
               <div className="flex items-center gap-4 pt-6 border-t border-white/10 mt-auto">
                 <a
                   href={proj.github}
