@@ -12,6 +12,14 @@ type FormState = {
 type FormErrors = Partial<Record<keyof FormState, string>>;
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const CONTACT_EMAIL = "vvictort20@gmail.com";
+
+type ContactResponse = {
+  message?: string;
+  fieldErrors?: FormErrors;
+  code?: string;
+  fallbackEmail?: string;
+};
 
 export function ContactSection() {
   const initialFormState: FormState = {
@@ -34,6 +42,7 @@ export function ContactSection() {
   const [fieldErrors, setFieldErrors] = useState<FormErrors>({});
   const [submitStatus, setSubmitStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [submitMessage, setSubmitMessage] = useState("");
+  const [fallbackEmail, setFallbackEmail] = useState("");
 
   const validateField = (field: keyof FormState, value: string) => {
     const trimmedValue = value.trim();
@@ -96,12 +105,14 @@ export function ContactSection() {
       setFieldErrors(nextErrors);
       setSubmitStatus("error");
       setSubmitMessage("Please fix the highlighted fields.");
+      setFallbackEmail("");
       return;
     }
 
     setSubmitStatus("submitting");
     setSubmitMessage("");
     setFieldErrors({});
+    setFallbackEmail("");
 
     try {
       const response = await fetch("/api/contact", {
@@ -112,24 +123,53 @@ export function ContactSection() {
         body: JSON.stringify(formState),
       });
 
-      const data = (await response.json().catch(() => null)) as
-        | { message?: string; fieldErrors?: FormErrors }
-        | null;
+      const data = (await response.json().catch(() => null)) as ContactResponse | null;
 
       if (!response.ok) {
         if (data?.fieldErrors) {
           setFieldErrors(data.fieldErrors);
         }
-        throw new Error(data?.message || "Unable to send your message right now.");
+
+        const nextFallbackEmail = data?.fallbackEmail || (response.status >= 500 ? CONTACT_EMAIL : "");
+        setFallbackEmail(nextFallbackEmail);
+
+        if (data?.message) {
+          throw new Error(data.message);
+        }
+
+        if (response.status >= 500) {
+          throw new Error(`The contact gateway is unavailable right now. Please email me directly at ${CONTACT_EMAIL}.`);
+        }
+
+        throw new Error("Unable to send your message right now.");
       }
 
       setFormState(initialFormState);
       setFieldErrors({});
       setSubmitStatus("success");
       setSubmitMessage(data?.message || "Transmission sent successfully.");
+      setFallbackEmail("");
     } catch (error) {
       setSubmitStatus("error");
-      setSubmitMessage(error instanceof Error ? error.message : "Unable to send your message right now.");
+
+      if (error instanceof Error) {
+        const isNetworkFailure =
+          error.message === "Failed to fetch" ||
+          error.message.includes("Load failed") ||
+          error.message.includes("NetworkError");
+
+        if (isNetworkFailure) {
+          setFallbackEmail(CONTACT_EMAIL);
+          setSubmitMessage(`The contact gateway is unavailable right now. Please email me directly at ${CONTACT_EMAIL}.`);
+          return;
+        }
+
+        setSubmitMessage(error.message);
+        return;
+      }
+
+      setFallbackEmail(CONTACT_EMAIL);
+      setSubmitMessage(`The contact gateway is unavailable right now. Please email me directly at ${CONTACT_EMAIL}.`);
     }
   };
 
@@ -257,6 +297,14 @@ export function ContactSection() {
                 className={`text-xs leading-relaxed ${submitStatus === "error" ? "text-red-400" : "text-green-400"}`}>
                 {submitMessage}
               </p>
+            )}
+
+            {submitStatus === "error" && fallbackEmail && (
+              <a
+                href={`mailto:${fallbackEmail}`}
+                className="self-start font-mono text-[11px] font-bold tracking-widest uppercase text-primary hover:text-primary/80 transition-colors">
+                Email me directly instead
+              </a>
             )}
           </form>
         </motion.div>

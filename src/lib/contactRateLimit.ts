@@ -120,6 +120,37 @@ export async function takeContactRateLimitSlot(key: string) {
     return {
       allowed: true as const,
       retryAfterSeconds: 0,
+      reservedAt: now,
     };
+  });
+}
+
+export async function releaseContactRateLimitSlot(key: string, reservedAt: number) {
+  return withStoreLock(async () => {
+    const now = Date.now();
+    const store = await readStore();
+
+    pruneStore(store, now);
+
+    const attempts = store[key];
+    if (!attempts || attempts.length === 0) {
+      return;
+    }
+
+    const index = attempts.indexOf(reservedAt);
+    if (index === -1) {
+      return;
+    }
+
+    const nextAttempts = [...attempts];
+    nextAttempts.splice(index, 1);
+
+    if (nextAttempts.length > 0) {
+      store[key] = nextAttempts;
+    } else {
+      delete store[key];
+    }
+
+    await writeStore(store);
   });
 }

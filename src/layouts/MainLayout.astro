@@ -1,6 +1,8 @@
 ---
 import "../styles/global.css";
 import { SmoothScroll } from "../components/layout/SmoothScroll";
+import Analytics from "@vercel/analytics/astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
 
 interface Props {
   title: string;
@@ -18,12 +20,15 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <meta name="description" content={description} />
   </head>
   <body class="min-h-screen bg-bg text-fg">
     <SmoothScroll client:load />
     <slot />
+    <Analytics />
+    <SpeedInsights />
     <style>
       html.lenis, html.lenis body {
         height: auto;

@@ -1,8 +1,13 @@
 import type { APIRoute } from "astro";
-import { resolveRateLimitKey, takeContactRateLimitSlot } from "../../lib/contactRateLimit";
+import {
+  releaseContactRateLimitSlot,
+  resolveRateLimitKey,
+  takeContactRateLimitSlot,
+} from "../../lib/contactRateLimit";
 
 const CONTACT_EMAIL = "vvictort20@gmail.com";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const RESEND_TIMEOUT_MS = 8000;
 
 type ErrorFields = {
   name?: string;
@@ -14,6 +19,8 @@ function json(
   payload: {
     message: string;
     fieldErrors?: ErrorFields;
+    code?: string;
+    fallbackEmail?: string;
   },
   status: number,
   extraHeaders: Record<string, string> = {},
@@ -40,119 +47,204 @@ function escapeHtml(value: string) {
     .replaceAll("'", "&#39;");
 }
 
+function gatewayFailure(message: string, status: number, code = "gateway_unavailable") {
+  return json(
+    {
+      message,
+      code,
+      fallbackEmail: CONTACT_EMAIL,
+    },
+    status,
+  );
+}
+
+async function releaseReservedSlot(key: string, reservedAt: number | undefined) {
+  if (typeof reservedAt !== "number") return;
+
+  try {
+    await releaseContactRateLimitSlot(key, reservedAt);
+  } catch (error) {
+    console.error("Failed to release contact rate limit slot:", error);
+  }
+}
+
 export const prerender = false;
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
-  const resendApiKey = import.meta.env.RESEND_API_KEY;
-  const resendFromEmail = import.meta.env.RESEND_FROM_EMAIL || "Portfolio Contact <onboarding@resend.dev>";
-
-  if (!resendApiKey) {
-    return json({ message: "Email delivery is not configured on the server." }, 500);
-  }
-
-  let payload: {
-    name?: unknown;
-    email?: unknown;
-    subject?: unknown;
-    message?: unknown;
-  };
-
   try {
-    payload = await request.json();
-  } catch {
-    return json({ message: "Invalid request body." }, 400);
-  }
+    const resendApiKey = import.meta.env.RESEND_API_KEY;
+    const resendFromEmail = import.meta.env.RESEND_FROM_EMAIL || "Portfolio Contact <onboarding@resend.dev>";
 
-  const name = sanitize(payload.name, 120);
-  const email = sanitize(payload.email, 320);
-  const subject = sanitize(payload.subject, 160);
-  const message = sanitize(payload.message, 5000);
+    if (!resendApiKey) {
+      return gatewayFailure(
+        `Email delivery is not configured right now. Please email me directly at ${CONTACT_EMAIL}.`,
+        500,
+        "gateway_misconfigured",
+      );
+    }
 
-  const fieldErrors: ErrorFields = {};
+    let payload: {
+      name?: unknown;
+      email?: unknown;
+      subject?: unknown;
+      message?: unknown;
+    };
 
-  if (!name) fieldErrors.name = "Your name is required.";
-  if (!email) fieldErrors.email = "Your email is required.";
-  if (!message) fieldErrors.message = "A message is required.";
+    try {
+      payload = await request.json();
+    } catch {
+      return json({ message: "Invalid request body." }, 400);
+    }
 
-  if (Object.keys(fieldErrors).length > 0) {
-    return json(
-      {
-        message: "Please fill in the required fields.",
-        fieldErrors,
-      },
-      400,
-    );
-  }
+    const name = sanitize(payload.name, 120);
+    const email = sanitize(payload.email, 320);
+    const subject = sanitize(payload.subject, 160);
+    const message = sanitize(payload.message, 5000);
 
-  if (!EMAIL_PATTERN.test(email)) {
-    return json(
-      {
-        message: "Please enter a valid email address.",
-        fieldErrors: {
-          email: "Please enter a valid email address.",
+    const fieldErrors: ErrorFields = {};
+
+    if (!name) fieldErrors.name = "Your name is required.";
+    if (!email) fieldErrors.email = "Your email is required.";
+    if (!message) fieldErrors.message = "A message is required.";
+
+    if (Object.keys(fieldErrors).length > 0) {
+      return json(
+        {
+          message: "Please fill in the required fields.",
+          fieldErrors,
         },
-      },
-      400,
+        400,
+      );
+    }
+
+    if (!EMAIL_PATTERN.test(email)) {
+      return json(
+        {
+          message: "Please enter a valid email address.",
+          fieldErrors: {
+            email: "Please enter a valid email address.",
+          },
+        },
+        400,
+      );
+    }
+
+    const rateLimitKey = resolveRateLimitKey(clientAddress, request, email);
+    const rateLimitResult = await takeContactRateLimitSlot(rateLimitKey);
+
+    if (!rateLimitResult.allowed) {
+      return json(
+        {
+          message: "Daily message limit reached. Please try again tomorrow.",
+        },
+        429,
+        {
+          "Retry-After": String(rateLimitResult.retryAfterSeconds),
+        },
+      );
+    }
+
+    const reservedAt = rateLimitResult.reservedAt;
+    const finalSubject = subject || `New portfolio message from ${name}`;
+    const escapedName = escapeHtml(name);
+    const escapedEmail = escapeHtml(email);
+    const escapedSubject = escapeHtml(finalSubject);
+    const escapedMessage = escapeHtml(message).replaceAll("\n", "<br />");
+
+    const abortController = new AbortController();
+    const timeoutId = setTimeout(() => abortController.abort(), RESEND_TIMEOUT_MS);
+
+    let resendResponse: Response;
+
+    try {
+      resendResponse = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${resendApiKey}`,
+          "Content-Type": "application/json",
+        },
+        signal: abortController.signal,
+        body: JSON.stringify({
+          from: resendFromEmail,
+          to: [CONTACT_EMAIL],
+          reply_to: email,
+          subject: `Portfolio contact: ${finalSubject}`,
+          text: [
+            `Name: ${name}`,
+            `Email: ${email}`,
+            `Subject: ${finalSubject}`,
+            "",
+            message,
+          ].join("\n"),
+          html: `
+            <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111827;">
+              <h2 style="margin-bottom: 16px;">New portfolio contact form submission</h2>
+              <p><strong>Name:</strong> ${escapedName}</p>
+              <p><strong>Email:</strong> ${escapedEmail}</p>
+              <p><strong>Subject:</strong> ${escapedSubject}</p>
+              <p><strong>Message:</strong></p>
+              <p>${escapedMessage}</p>
+            </div>
+          `,
+        }),
+      });
+    } catch (error) {
+      await releaseReservedSlot(rateLimitKey, reservedAt);
+
+      const isTimeout = error instanceof DOMException && error.name === "AbortError";
+      console.error("Resend request failed:", error);
+
+      if (isTimeout) {
+        return gatewayFailure(
+          `The contact gateway timed out. Please email me directly at ${CONTACT_EMAIL}.`,
+          504,
+          "gateway_timeout",
+        );
+      }
+
+      return gatewayFailure(
+        `The contact gateway is temporarily unavailable. Please email me directly at ${CONTACT_EMAIL}.`,
+        502,
+      );
+    } finally {
+      clearTimeout(timeoutId);
+    }
+
+    if (!resendResponse.ok) {
+      await releaseReservedSlot(rateLimitKey, reservedAt);
+
+      const errorText = await resendResponse.text().catch(() => "");
+      console.error("Resend error:", resendResponse.status, errorText);
+
+      if (resendResponse.status === 401 || resendResponse.status === 403 || resendResponse.status === 422) {
+        return gatewayFailure(
+          `The contact gateway is configured incorrectly right now. Please email me directly at ${CONTACT_EMAIL}.`,
+          500,
+          "gateway_misconfigured",
+        );
+      }
+
+      if (resendResponse.status === 429) {
+        return gatewayFailure(
+          `The contact gateway is rate limited right now. Please email me directly at ${CONTACT_EMAIL}.`,
+          503,
+          "gateway_rate_limited",
+        );
+      }
+
+      return gatewayFailure(
+        `Unable to send your message right now. Please email me directly at ${CONTACT_EMAIL}.`,
+        502,
+      );
+    }
+
+    return json({ message: "Transmission sent successfully." }, 200);
+  } catch (error) {
+    console.error("Unexpected contact API error:", error);
+    return gatewayFailure(
+      `The contact gateway failed unexpectedly. Please email me directly at ${CONTACT_EMAIL}.`,
+      502,
+      "gateway_unexpected",
     );
   }
-
-  const rateLimitKey = resolveRateLimitKey(clientAddress, request, email);
-  const rateLimitResult = await takeContactRateLimitSlot(rateLimitKey);
-
-  if (!rateLimitResult.allowed) {
-    return json(
-      {
-        message: "Daily message limit reached. Please try again tomorrow.",
-      },
-      429,
-      {
-        "Retry-After": String(rateLimitResult.retryAfterSeconds),
-      },
-    );
-  }
-
-  const finalSubject = subject || `New portfolio message from ${name}`;
-  const escapedName = escapeHtml(name);
-  const escapedEmail = escapeHtml(email);
-  const escapedSubject = escapeHtml(finalSubject);
-  const escapedMessage = escapeHtml(message).replaceAll("\n", "<br />");
-
-  const resendResponse = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${resendApiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: resendFromEmail,
-      to: [CONTACT_EMAIL],
-      reply_to: email,
-      subject: `Portfolio contact: ${finalSubject}`,
-      text: [
-        `Name: ${name}`,
-        `Email: ${email}`,
-        `Subject: ${finalSubject}`,
-        "",
-        message,
-      ].join("\n"),
-      html: `
-        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111827;">
-          <h2 style="margin-bottom: 16px;">New portfolio contact form submission</h2>
-          <p><strong>Name:</strong> ${escapedName}</p>
-          <p><strong>Email:</strong> ${escapedEmail}</p>
-          <p><strong>Subject:</strong> ${escapedSubject}</p>
-          <p><strong>Message:</strong></p>
-          <p>${escapedMessage}</p>
-        </div>
-      `,
-    }),
-  });
-
-  if (!resendResponse.ok) {
-    const errorText = await resendResponse.text();
-    console.error("Resend error:", errorText);
-    return json({ message: "Unable to send your message right now. Please try again shortly." }, 502);
-  }
-
-  return json({ message: "Transmission sent successfully." }, 200);
 };
