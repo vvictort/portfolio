@@ -1,26 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Plane, Menu, X, ChevronRight } from "lucide-react";
-import { cn } from "../../utils";
+import { cn, scrollSectionIntoView } from "../../utils";
 import { motion, AnimatePresence } from "framer-motion";
+
+const MOBILE_MENU_TOGGLE_EVENT = "portfolio:mobile-menu-toggle";
 
 const navLinks = [
   { href: "/#about", label: "ABOUT", gate: "A1" },
   { href: "/#journey", label: "JOURNEY", gate: "B2" },
-  { href: "/#destinations", label: "DESTINATIONS", gate: "C3" },
+  { href: "/#destinations", label: "PROJECTS", gate: "C3" },
   { href: "/#beyond-code", label: "BEYOND CODE", gate: "D4" },
   { href: "/#contact", label: "CONTACT", gate: "E5" },
   { href: "/#arrivals", label: "ARRIVALS", gate: "F6" },
-];
-
-const galleryLinks = [
-  { href: "/outdoor", label: "OUTDOOR LOG", gate: "04-A" },
-  { href: "/food", label: "FOOD LOG", gate: "04-B" },
 ];
 
 export function Navigation() {
   const [activeSection, setActiveSection] = useState("departures");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hoveredPath, setHoveredPath] = useState<string | null>(null);
+  const lockedScrollYRef = useRef(0);
+  const pendingSectionIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -46,11 +45,68 @@ export function Navigation() {
   }, []);
 
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
+    const syncHashScroll = () => {
+      const sectionId = window.location.hash.slice(1);
+      if (!sectionId) return;
+
+      requestAnimationFrame(() => {
+        scrollSectionIntoView(sectionId, "auto");
+      });
+    };
+
+    syncHashScroll();
+    window.addEventListener("hashchange", syncHashScroll);
+
+    return () => window.removeEventListener("hashchange", syncHashScroll);
+  }, []);
+
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent(MOBILE_MENU_TOGGLE_EVENT, { detail: { isOpen: isMobileMenuOpen } }));
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const root = document.documentElement;
+    const body = document.body;
+    const previousRootOverflow = root.style.overflow;
+    const previousBodyOverflow = body.style.overflow;
+    const previousBodyPosition = body.style.position;
+    const previousBodyTop = body.style.top;
+    const previousBodyLeft = body.style.left;
+    const previousBodyRight = body.style.right;
+    const previousBodyWidth = body.style.width;
+
+    lockedScrollYRef.current = window.scrollY;
+    root.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${lockedScrollYRef.current}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+
+    return () => {
+      root.style.overflow = previousRootOverflow;
+      body.style.overflow = previousBodyOverflow;
+      body.style.position = previousBodyPosition;
+      body.style.top = previousBodyTop;
+      body.style.left = previousBodyLeft;
+      body.style.right = previousBodyRight;
+      body.style.width = previousBodyWidth;
+      window.scrollTo({ top: lockedScrollYRef.current, behavior: "auto" });
+    };
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    if (isMobileMenuOpen || !pendingSectionIdRef.current) return;
+
+    const sectionId = pendingSectionIdRef.current;
+    pendingSectionIdRef.current = null;
+
+    requestAnimationFrame(() => {
+      scrollSectionIntoView(sectionId);
+    });
   }, [isMobileMenuOpen]);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -65,8 +121,13 @@ export function Navigation() {
       const element = document.getElementById(id);
       if (element) {
         e.preventDefault();
-        element.scrollIntoView({ behavior: "smooth" });
-        setIsMobileMenuOpen(false);
+        if (isMobileMenuOpen) {
+          pendingSectionIdRef.current = id;
+          setIsMobileMenuOpen(false);
+          return;
+        }
+
+        scrollSectionIntoView(id);
       }
     } else {
       // For any other link (or we're on a subpage), allow default behavior
@@ -76,7 +137,9 @@ export function Navigation() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center w-full bg-transparent transition-all duration-500">
+      <nav
+        data-site-nav
+        className="fixed top-0 left-0 right-0 z-50 flex justify-center w-full bg-transparent transition-all duration-500">
         <div className="w-full max-w-6xl mx-auto px-6 md:px-8 py-4 flex flex-row items-center justify-between">
           {/* Logo */}
           <motion.div
@@ -234,35 +297,6 @@ export function Navigation() {
                     </motion.a>
                   );
                 })}
-              </div>
-
-              {/* Discovery Logs Divider */}
-              <div className="flex items-center gap-4 my-4 px-4">
-                <span className="shrink-0 text-[9px] leading-none font-mono text-zinc-500 tracking-[0.45em] uppercase whitespace-nowrap">
-                  Discovery Logs
-                </span>
-                <div className="flex-1 h-px bg-white/5" />
-              </div>
-
-              {/* Gallery Nav */}
-              <div className="grid grid-cols-2 gap-2">
-                {galleryLinks.map((link, i) => (
-                  <motion.a
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 + i * 0.1 }}
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="bg-white/3 border border-white/5 rounded-xl p-4 flex flex-col gap-2 hover:bg-white/5 hover:border-primary/20 transition-all group">
-                    <span className="text-[8px] font-mono text-zinc-600 tracking-widest uppercase font-bold group-hover:text-primary transition-colors">
-                      {link.gate}
-                    </span>
-                    <span className="text-[10px] font-mono text-white font-bold tracking-widest uppercase group-hover:text-primary transition-colors">
-                      {link.label}
-                    </span>
-                  </motion.a>
-                ))}
               </div>
 
               {/* Bottom Decoration */}

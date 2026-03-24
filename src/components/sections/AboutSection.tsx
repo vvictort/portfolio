@@ -1,8 +1,41 @@
 import React from "react";
 import { Plane, MapPin, GraduationCap, Code, Timer } from "lucide-react";
 import { motion } from "framer-motion";
+import { cn } from "../../utils";
+
+const phaseToneClasses: Record<string, string> = {
+  TAXIING: "text-amber-300 [text-shadow:0_0_8px_rgba(252,211,77,0.55)]",
+  TAKE_OFF: "text-orange-400 [text-shadow:0_0_8px_rgba(251,146,60,0.55)]",
+  CLIMBING: "text-sky-400 [text-shadow:0_0_8px_rgba(56,189,248,0.55)]",
+  CRUISING: "text-green-500 [text-shadow:0_0_8px_rgba(34,197,94,0.6)]",
+};
 
 export function AboutSection() {
+  const skills = {
+    LANGUAGES: [
+      { name: "Java", status: "CRUISING" },
+      { name: "TypeScript", status: "CLIMBING" },
+      { name: "JavaScript", status: "CLIMBING" },
+      { name: "Python", status: "CLIMBING" },
+      { name: "R", status: "CLIMBING" },
+      { name: "HTML/CSS", status: "CRUISING" },
+    ],
+    FRAMEWORKS: [
+      { name: "React", status: "CLIMBING" },
+      { name: "Tailwind CSS", status: "CLIMBING" },
+      { name: "Node.js", status: "CLIMBING" },
+      { name: "Astro", status: "TAXIING" },
+      { name: "ThreeJS", status: "TAXIING" },
+    ],
+    "TOOLS & OTHER": [
+      { name: "Git", status: "CLIMBING" },
+      { name: "scikit-learn", status: "CLIMBING" },
+      { name: "Jupyter", status: "CLIMBING" },
+      { name: "Figma", status: "CLIMBING" },
+      { name: "VS Code", status: "CRUISING" },
+    ],
+  };
+
   const containerVars = {
     hidden: { opacity: 0 },
     show: {
@@ -19,15 +52,16 @@ export function AboutSection() {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-8 py-20 flex flex-col gap-8">
+    <div className="w-full max-w-6xl mx-auto px-8 py-28 flex flex-col gap-8">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
+        data-scroll-anchor
         className="flex flex-col gap-2">
         <span className="text-primary font-mono text-sm font-bold tracking-widest">GATE A1 //</span>
-        <h2 className="text-5xl font-bold tracking-tight text-white mb-4">Passenger Profile</h2>
+        <h2 className="text-5xl font-bold tracking-tight text-white mb-4">Flight Profile</h2>
       </motion.div>
 
       <motion.div
@@ -154,6 +188,35 @@ export function AboutSection() {
             landscapes to local food scenes. I believe the best software comes from being curious about the world and
             staying open to new experiences.
           </p>
+        </motion.div>
+
+        <motion.div variants={itemVars} className="flex flex-col gap-6 pt-16 md:pt-24">
+          <span className="text-zinc-500 font-mono text-sm tracking-widest uppercase">IN-FLIGHT EQUIPMENT</span>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+            {Object.entries(skills).map(([category, items]) => (
+              <div key={category} className="flex flex-col gap-4">
+                <span className="text-primary font-mono text-xs font-bold tracking-widest">{category}</span>
+                <div className="flex flex-col gap-2">
+                  {items.map((item, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center justify-between bg-[#111] border border-white/5 rounded-md px-4 py-3">
+                      <span className="font-mono text-xs text-white uppercase tracking-wider">{item.name}</span>
+                      <span
+                        className={cn(
+                          "font-mono text-[10px] tracking-widest",
+                          phaseToneClasses[item.status] ??
+                          "text-zinc-500 [text-shadow:0_0_8px_rgba(113,113,122,0.5)]",
+                        )}>
+                        {item.status}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </motion.div>
       </motion.div>
     </div>

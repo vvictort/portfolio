@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import Lenis from "lenis";
 
+const MOBILE_MENU_TOGGLE_EVENT = "portfolio:mobile-menu-toggle";
+
 export function SmoothScroll() {
   useEffect(() => {
     const lenis = new Lenis({
@@ -19,9 +21,22 @@ export function SmoothScroll() {
       rafId = requestAnimationFrame(raf);
     }
 
+    function handleMobileMenuToggle(event: Event) {
+      const { isOpen } = (event as CustomEvent<{ isOpen?: boolean }>).detail ?? {};
+
+      if (isOpen) {
+        lenis.stop();
+        return;
+      }
+
+      lenis.start();
+    }
+
+    window.addEventListener(MOBILE_MENU_TOGGLE_EVENT, handleMobileMenuToggle);
     rafId = requestAnimationFrame(raf);
 
     return () => {
+      window.removeEventListener(MOBILE_MENU_TOGGLE_EVENT, handleMobileMenuToggle);
       cancelAnimationFrame(rafId);
       lenis.destroy();
     };

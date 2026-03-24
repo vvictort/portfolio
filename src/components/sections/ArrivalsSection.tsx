@@ -30,13 +30,14 @@ export function ArrivalsSection() {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-8 h-full flex flex-col py-20">
+    <div className="w-full max-w-6xl mx-auto px-8 flex flex-col py-28">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="flex flex-col gap-2 relative mt-20">
+        data-scroll-anchor
+        className="flex flex-col gap-2 relative">
         <span className="text-primary font-mono text-sm font-bold tracking-widest">GATE F6 //</span>
         <h2 className="text-6xl font-bold tracking-tight text-white mb-2">Arrivals</h2>
         <p className="text-zinc-400 text-xl max-w-xl leading-relaxed mt-4">
@@ -49,7 +50,7 @@ export function ArrivalsSection() {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-100px" }}
-        className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
+        className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12 md:mt-16">
         {contacts.map((contact, i) => (
           <motion.a
             variants={itemVars}
@@ -74,7 +75,7 @@ export function ArrivalsSection() {
         ))}
       </motion.div>
 
-      <div className="mt-auto pt-20 pb-8 flex flex-col md:flex-row items-center justify-between border-t border-white/5 text-zinc-600 font-mono text-[10px] uppercase tracking-widest px-4 gap-4 text-center md:text-left">
+      <div className="mt-24 md:mt-32 pt-8 pb-8 flex flex-col md:flex-row items-center justify-between border-t border-white/5 text-zinc-600 font-mono text-[10px] uppercase tracking-widest px-4 gap-4 text-center md:text-left">
         <div className="flex items-center gap-2">
           <Plane className="w-4 h-4" /> VICTOR THAI
         </div>

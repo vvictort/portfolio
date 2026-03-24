@@ -9,6 +9,7 @@ const CONTACT_EMAIL = "vvictort20@gmail.com";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RESEND_FROM_EMAIL_PATTERN = /^(?:[^<>\r\n]+<[^<>\s@]+@[^\s@]+\.[^\s@]+>|[^<>\s@]+@[^\s@]+\.[^\s@]+)$/;
 const RESEND_TIMEOUT_MS = 8000;
+const INBOX_SUBJECT_PREFIX = "[ACTION REQUIRED]";
 
 function deliveryUnavailableMessage() {
   return `I can't receive contact form messages right now. Please email me directly at ${CONTACT_EMAIL}.`;
@@ -92,6 +93,162 @@ async function releaseReservedSlot(key: string, reservedAt: number | undefined) 
   }
 }
 
+type ContactNotificationPayload = {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+};
+
+function buildInboxSubject(subject: string) {
+  return `${INBOX_SUBJECT_PREFIX} Portfolio Contact | ${subject}`;
+}
+
+function buildReplyHref(email: string, subject: string) {
+  return `mailto:${email}?subject=${encodeURIComponent(`Re: ${subject}`)}`;
+}
+
+function buildContactEmailText({ name, email, subject, message }: ContactNotificationPayload) {
+  const inboxSubject = buildInboxSubject(subject);
+
+  return [
+    inboxSubject,
+    "",
+    "CONTROL TOWER // PRIORITY INBOUND",
+    "A new message landed through the portfolio contact form.",
+    "",
+    `Sender: ${name}`,
+    `Reply-To: ${email}`,
+    `Message Subject: ${subject}`,
+    "",
+    "Message:",
+    message,
+  ].join("\n");
+}
+
+function buildContactEmailHtml({ name, email, subject, message }: ContactNotificationPayload) {
+  const inboxSubject = buildInboxSubject(subject);
+  const replyHref = buildReplyHref(email, subject);
+  const escapedInboxSubject = escapeHtml(inboxSubject);
+  const escapedName = escapeHtml(name);
+  const escapedEmail = escapeHtml(email);
+  const escapedSubject = escapeHtml(subject);
+  const escapedMessage = escapeHtml(message).replaceAll("\n", "<br />");
+
+  return `
+    <!doctype html>
+    <html lang="en">
+      <body style="margin: 0; padding: 0; background-color: #050505; color: #e4e4e7; font-family: Inter, Arial, sans-serif;">
+        <div style="display: none; max-height: 0; overflow: hidden; opacity: 0;">
+          New inbound portfolio message from ${escapedName}. ${escapedSubject}
+        </div>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #050505;">
+          <tr>
+            <td align="center" style="padding: 24px 12px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 680px; background-color: #0a0a0a; border: 1px solid #27272a; border-radius: 24px; overflow: hidden;">
+                <tr>
+                  <td style="height: 6px; background-color: #facc15; font-size: 0; line-height: 0;">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td style="padding: 32px 32px 18px;">
+                    <div style="font-family: 'Share Tech Mono', 'Courier New', monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: #facc15; margin-bottom: 18px;">
+                      Control Tower // Priority Inbound
+                    </div>
+                    <div style="font-size: 32px; line-height: 1.1; font-weight: 700; color: #ffffff; margin-bottom: 12px;">
+                      New Transmission Received
+                    </div>
+                    <div style="font-size: 15px; line-height: 1.7; color: #a1a1aa;">
+                      A new message landed through the portfolio contact form and is ready for follow-up.
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 0 32px 24px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #facc15; border-radius: 18px;">
+                      <tr>
+                        <td style="padding: 18px 20px;">
+                          <div style="font-family: 'Share Tech Mono', 'Courier New', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: #000000; opacity: 0.7; margin-bottom: 10px;">
+                            Inbox Subject
+                          </div>
+                          <div style="font-size: 18px; line-height: 1.45; font-weight: 700; color: #000000;">
+                            ${escapedInboxSubject}
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 0 32px 24px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #111111; border: 1px solid #27272a; border-radius: 18px;">
+                      <tr>
+                        <td style="padding: 18px 20px; border-bottom: 1px solid #27272a;">
+                          <div style="font-family: 'Share Tech Mono', 'Courier New', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: #facc15; margin-bottom: 8px;">
+                            Sender
+                          </div>
+                          <div style="font-size: 17px; line-height: 1.5; font-weight: 600; color: #ffffff;">
+                            ${escapedName}
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 18px 20px; border-bottom: 1px solid #27272a;">
+                          <div style="font-family: 'Share Tech Mono', 'Courier New', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: #facc15; margin-bottom: 8px;">
+                            Reply-To
+                          </div>
+                          <a href="mailto:${escapedEmail}" style="font-size: 16px; line-height: 1.5; color: #facc15; text-decoration: none;">
+                            ${escapedEmail}
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 18px 20px;">
+                          <div style="font-family: 'Share Tech Mono', 'Courier New', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: #facc15; margin-bottom: 8px;">
+                            Message Subject
+                          </div>
+                          <div style="font-size: 16px; line-height: 1.6; color: #ffffff;">
+                            ${escapedSubject}
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 0 32px 16px;">
+                    <div style="font-family: 'Share Tech Mono', 'Courier New', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: #facc15; margin-bottom: 10px;">
+                      Message
+                    </div>
+                    <div style="background-color: #111111; border: 1px solid #27272a; border-radius: 18px; padding: 20px; font-size: 16px; line-height: 1.8; color: #e4e4e7;">
+                      ${escapedMessage}
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 0 32px 32px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="background-color: #facc15; border-radius: 999px;">
+                          <a href="${replyHref}" style="display: inline-block; padding: 14px 20px; font-family: 'Share Tech Mono', 'Courier New', monospace; font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; color: #000000;">
+                            Reply To Sender
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                    <div style="margin-top: 14px; font-size: 13px; line-height: 1.6; color: #71717a;">
+                      Replying from your email client will route directly to the sender.
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </body>
+    </html>
+  `;
+}
+
 export const prerender = false;
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
@@ -170,11 +327,13 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     }
 
     const reservedAt = rateLimitResult.reservedAt;
-    const finalSubject = subject || `New portfolio message from ${name}`;
-    const escapedName = escapeHtml(name);
-    const escapedEmail = escapeHtml(email);
-    const escapedSubject = escapeHtml(finalSubject);
-    const escapedMessage = escapeHtml(message).replaceAll("\n", "<br />");
+    const finalSubject = subject || `New inquiry from ${name}`;
+    const notificationPayload = {
+      name,
+      email,
+      subject: finalSubject,
+      message,
+    };
 
     const abortController = new AbortController();
     const timeoutId = setTimeout(() => abortController.abort(), RESEND_TIMEOUT_MS);
@@ -193,24 +352,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
           from: resendFromEmail,
           to: [CONTACT_EMAIL],
           reply_to: email,
-          subject: `Portfolio contact: ${finalSubject}`,
-          text: [
-            `Name: ${name}`,
-            `Email: ${email}`,
-            `Subject: ${finalSubject}`,
-            "",
-            message,
-          ].join("\n"),
-          html: `
-            <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111827;">
-              <h2 style="margin-bottom: 16px;">New portfolio contact form submission</h2>
-              <p><strong>Name:</strong> ${escapedName}</p>
-              <p><strong>Email:</strong> ${escapedEmail}</p>
-              <p><strong>Subject:</strong> ${escapedSubject}</p>
-              <p><strong>Message:</strong></p>
-              <p>${escapedMessage}</p>
-            </div>
-          `,
+          subject: buildInboxSubject(finalSubject),
+          text: buildContactEmailText(notificationPayload),
+          html: buildContactEmailHtml(notificationPayload),
         }),
       });
     } catch (error) {

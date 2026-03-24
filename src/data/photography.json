@@ -3,7 +3,7 @@
     {
       "id": "outdoor-20251223",
       "title": "Ski Trip 2025",
-      "location": "Sunshine Village, Banff",
+      "location": "Sunshine Village, Banff, AB",
       "coordinates": "51.0924, -115.7667",
       "date": "2025-12-23",
       "images": [
@@ -16,7 +16,7 @@
     {
       "id": "outdoor-20251101",
       "title": "End of Fall",
-      "location": "UBC ICICS",
+      "location": "UBC ICICS - Vancouver, BC",
       "coordinates": "49.26, -123.25",
       "date": "2025-11-01",
       "images": [
@@ -27,7 +27,7 @@
     {
       "id": "outdoor-20251021",
       "title": "During Fall",
-      "location": "UBC Koerner Library",
+      "location": "UBC Koerner - Vancouver, BC",
       "coordinates": "49.26, -123.25",
       "date": "2025-10-21",
       "images": [
@@ -38,7 +38,7 @@
     {
       "id": "outdoor-20251013",
       "title": "Start of Fall",
-      "location": "UBC ICICS",
+      "location": "UBC ICICS - Vancouver, BC",
       "coordinates": "49.26, -123.25",
       "date": "2025-10-13",
       "images": [
@@ -49,7 +49,7 @@
     {
       "id": "outdoor-20250929",
       "title": "Rainbowwww",
-      "location": "UBC IKB Library",
+      "location": "UBC IKB - Vancouver, BC",
       "coordinates": "49.26, -123.25",
       "date": "2025-09-29",
       "images": [
@@ -62,7 +62,7 @@
     {
       "id": "food-20251210",
       "title": "Ramen Yummm",
-      "location": "Kinton Ramen",
+      "location": "Kinton Ramen - Vancouver, BC",
       "coordinates": "49.26, -123.25",
       "date": "2025-12-10",
       "images": [
@@ -73,7 +73,7 @@
     {
       "id": "food-20251206",
       "title": "Motherland",
-      "location": "Pho 37",
+      "location": "Pho 37 - Vancouver, BC",
       "coordinates": "--",
       "date": "2025-12-06",
       "images": [
@@ -84,7 +84,7 @@
     {
       "id": "food-20251005",
       "title": "Fully Stacked Uni Student",
-      "location": "SFU",
+      "location": "SFU - Vancouver Campus",
       "coordinates": "49.2768, -122.9180",
       "date": "2025-10-05",
       "images": [

@@ -70,7 +70,7 @@
     "description": "Carbon Compass is an interactive web application that empowers users to reduce their environmental impact through informed transportation choices. Simply enter your origin and destination, and our app will show you multiple route options with their respective carbon footprints, helping you choose the most sustainable way to travel.",
     "tags": [
       "Vite",
-      "React/TS",
+      "React/JS",
       "Tailwind CSS",
       "JavaScript",
       "Google Cloud APIs"

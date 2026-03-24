@@ -13,12 +13,13 @@ export function BeyondCodeSection() {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-8 py-20 flex flex-col gap-8 text-center items-center justify-center h-full">
+    <div className="w-full max-w-6xl mx-auto px-8 py-28 flex flex-col gap-8 text-center items-center justify-center h-full">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
+        data-scroll-anchor
         className="flex flex-col gap-2 items-center">
         <span className="text-primary font-mono text-sm font-bold tracking-widest">GATE D4 //</span>
         <h2 className="text-5xl font-bold tracking-tight text-white mb-6">Beyond Code</h2>

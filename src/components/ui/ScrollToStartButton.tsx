@@ -1,14 +1,12 @@
 import React from "react";
 import { ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
+import { scrollSectionIntoView } from "../../utils";
 
 export function ScrollToStartButton() {
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const aboutSection = document.getElementById("about");
-    if (!aboutSection) return;
-
     e.preventDefault();
-    aboutSection.scrollIntoView({ behavior: "smooth" });
+    scrollSectionIntoView("about");
   };
 
   return (

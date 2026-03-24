@@ -32,12 +32,13 @@ export function DestinationsSection({ projects }: Props) {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-8 py-20 flex flex-col gap-8">
+    <div className="w-full max-w-6xl mx-auto px-8 py-28 flex flex-col gap-8">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
+        data-scroll-anchor
         className="flex flex-col gap-2 relative">
         <span className="text-primary font-mono text-sm font-bold tracking-widest">GATE C3 //</span>
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-0 mb-4 md:mb-0">

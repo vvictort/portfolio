@@ -24,39 +24,39 @@ const projects = [...projectsData].sort((a, b) => new Date(b.date).getTime() - n
 			{/* Departures Section */}
 			<section id="departures" class="min-h-screen w-full relative flex text-white flex-col items-center justify-center overflow-hidden">
 			<HeroStars client:load />
-			<div class="w-full max-w-6xl mx-auto px-8 relative z-10">
+			<div data-hero-sky-mask class="w-full max-w-6xl mx-auto px-8 relative z-10">
                 <FlightBoard client:load />
             </div>
             <ScrollToStartButton client:load />
 		</section>
 
 		{/* A1: About Section */}
-		<section id="about" class="min-h-screen w-full relative flex items-center justify-center py-20">
+		<section id="about" class="w-full relative">
 			<AboutSection client:idle />
 		</section>
 
         {/* B2: Journey Section */}
-		<section id="journey" class="min-h-screen w-full relative flex items-center justify-center py-20">
+		<section id="journey" class="w-full relative">
 			<JourneySection client:idle />
 		</section>
 
         {/* C3: Destinations Section */}
-		<section id="destinations" class="min-h-screen w-full relative flex items-center justify-center py-20">
+		<section id="destinations" class="w-full relative">
 			<DestinationsSection client:idle projects={projects} />
 		</section>
 
         {/* D4: Beyond Code Section */}
-		<section id="beyond-code" class="min-h-screen w-full relative flex items-center justify-center py-20">
+		<section id="beyond-code" class="w-full relative">
 			<BeyondCodeSection client:idle />
 		</section>
 
         {/* E5: Contact Section */}
-		<section id="contact" class="min-h-screen w-full relative flex items-center justify-center py-20">
+		<section id="contact" class="w-full relative">
 			<ContactSection client:idle />
 		</section>
 
         {/* F6: Arrivals Section */}
-		<section id="arrivals" class="min-h-screen w-full relative flex items-center justify-center">
+		<section id="arrivals" class="w-full relative">
 			<ArrivalsSection client:idle />
 		</section>
 		</main>
