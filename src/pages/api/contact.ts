@@ -9,6 +9,14 @@ const CONTACT_EMAIL = "vvictort20@gmail.com";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RESEND_TIMEOUT_MS = 8000;
 
+function deliveryUnavailableMessage() {
+  return `I can't receive contact form messages right now. Please email me directly at ${CONTACT_EMAIL}.`;
+}
+
+function deliveryRateLimitedMessage() {
+  return `The contact form is busy right now. Please try again shortly, or email me directly at ${CONTACT_EMAIL}.`;
+}
+
 type ErrorFields = {
   name?: string;
   email?: string;
@@ -73,14 +81,10 @@ export const prerender = false;
 export const POST: APIRoute = async ({ request, clientAddress }) => {
   try {
     const resendApiKey = import.meta.env.RESEND_API_KEY;
-    const resendFromEmail = import.meta.env.RESEND_FROM_EMAIL || "Portfolio Contact <onboarding@resend.dev>";
+    const resendFromEmail = import.meta.env.RESEND_FROM_EMAIL?.trim();
 
-    if (!resendApiKey) {
-      return gatewayFailure(
-        `Email delivery is not configured right now. Please email me directly at ${CONTACT_EMAIL}.`,
-        500,
-        "gateway_misconfigured",
-      );
+    if (!resendApiKey || !resendFromEmail) {
+      return gatewayFailure(deliveryUnavailableMessage(), 503, "gateway_misconfigured");
     }
 
     let payload: {
@@ -195,17 +199,10 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       console.error("Resend request failed:", error);
 
       if (isTimeout) {
-        return gatewayFailure(
-          `The contact gateway timed out. Please email me directly at ${CONTACT_EMAIL}.`,
-          504,
-          "gateway_timeout",
-        );
+        return gatewayFailure(deliveryUnavailableMessage(), 504, "gateway_timeout");
       }
 
-      return gatewayFailure(
-        `The contact gateway is temporarily unavailable. Please email me directly at ${CONTACT_EMAIL}.`,
-        502,
-      );
+      return gatewayFailure(deliveryUnavailableMessage(), 502);
     } finally {
       clearTimeout(timeoutId);
     }
@@ -217,34 +214,19 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       console.error("Resend error:", resendResponse.status, errorText);
 
       if (resendResponse.status === 401 || resendResponse.status === 403 || resendResponse.status === 422) {
-        return gatewayFailure(
-          `The contact gateway is configured incorrectly right now. Please email me directly at ${CONTACT_EMAIL}.`,
-          500,
-          "gateway_misconfigured",
-        );
+        return gatewayFailure(deliveryUnavailableMessage(), 503, "gateway_misconfigured");
       }
 
       if (resendResponse.status === 429) {
-        return gatewayFailure(
-          `The contact gateway is rate limited right now. Please email me directly at ${CONTACT_EMAIL}.`,
-          503,
-          "gateway_rate_limited",
-        );
+        return gatewayFailure(deliveryRateLimitedMessage(), 503, "gateway_rate_limited");
       }
 
-      return gatewayFailure(
-        `Unable to send your message right now. Please email me directly at ${CONTACT_EMAIL}.`,
-        502,
-      );
+      return gatewayFailure(deliveryUnavailableMessage(), 502);
     }
 
     return json({ message: "Transmission sent successfully." }, 200);
   } catch (error) {
     console.error("Unexpected contact API error:", error);
-    return gatewayFailure(
-      `The contact gateway failed unexpectedly. Please email me directly at ${CONTACT_EMAIL}.`,
-      502,
-      "gateway_unexpected",
-    );
+    return gatewayFailure(deliveryUnavailableMessage(), 502, "gateway_unexpected");
   }
 };

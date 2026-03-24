@@ -21,6 +21,34 @@ type ContactResponse = {
   fallbackEmail?: string;
 };
 
+const buildDeliveryUnavailableMessage = (email: string) =>
+  `I can't receive contact form messages right now. Email me directly at ${email}.`;
+
+const buildGatewayMessage = (code: string | undefined, email: string) => {
+  if (code === "gateway_rate_limited") {
+    return `The contact form is busy right now. Please try again shortly, or email me directly at ${email}.`;
+  }
+
+  return buildDeliveryUnavailableMessage(email);
+};
+
+const buildMailtoHref = (email: string, state: FormState) => {
+  const subject = state.subject.trim() || `Portfolio inquiry from ${state.name.trim() || "your site"}`;
+  const bodyLines = [
+    state.name.trim() ? `Name: ${state.name.trim()}` : "",
+    state.email.trim() ? `Email: ${state.email.trim()}` : "",
+    "",
+    state.message.trim(),
+  ].filter(Boolean);
+
+  const params = new URLSearchParams({
+    subject,
+    body: bodyLines.join("\n"),
+  });
+
+  return `mailto:${email}?${params.toString()}`;
+};
+
 export function ContactSection() {
   const initialFormState: FormState = {
     name: "",
@@ -134,11 +162,15 @@ export function ContactSection() {
         setFallbackEmail(nextFallbackEmail);
 
         if (data?.message) {
+          if (nextFallbackEmail) {
+            throw new Error(buildGatewayMessage(data.code, nextFallbackEmail));
+          }
+
           throw new Error(data.message);
         }
 
         if (response.status >= 500) {
-          throw new Error(`The contact gateway is unavailable right now. Please email me directly at ${CONTACT_EMAIL}.`);
+          throw new Error(buildDeliveryUnavailableMessage(nextFallbackEmail || CONTACT_EMAIL));
         }
 
         throw new Error("Unable to send your message right now.");
@@ -160,7 +192,7 @@ export function ContactSection() {
 
         if (isNetworkFailure) {
           setFallbackEmail(CONTACT_EMAIL);
-          setSubmitMessage(`The contact gateway is unavailable right now. Please email me directly at ${CONTACT_EMAIL}.`);
+          setSubmitMessage(buildDeliveryUnavailableMessage(CONTACT_EMAIL));
           return;
         }
 
@@ -169,9 +201,11 @@ export function ContactSection() {
       }
 
       setFallbackEmail(CONTACT_EMAIL);
-      setSubmitMessage(`The contact gateway is unavailable right now. Please email me directly at ${CONTACT_EMAIL}.`);
+      setSubmitMessage(buildDeliveryUnavailableMessage(CONTACT_EMAIL));
     }
   };
+
+  const fallbackMailtoHref = fallbackEmail ? buildMailtoHref(fallbackEmail, formState) : "";
 
   return (
     <div id="contact" className="w-full max-w-6xl mx-auto px-8 py-20 flex flex-col gap-12">
@@ -294,16 +328,18 @@ export function ContactSection() {
             {submitMessage && (
               <p
                 aria-live="polite"
-                className={`text-xs leading-relaxed ${submitStatus === "error" ? "text-red-400" : "text-green-400"}`}>
+                className={`text-xs leading-relaxed ${
+                  submitStatus === "error" ? (fallbackEmail ? "text-primary/90" : "text-red-400") : "text-green-400"
+                }`}>
                 {submitMessage}
               </p>
             )}
 
             {submitStatus === "error" && fallbackEmail && (
               <a
-                href={`mailto:${fallbackEmail}`}
+                href={fallbackMailtoHref}
                 className="self-start font-mono text-[11px] font-bold tracking-widest uppercase text-primary hover:text-primary/80 transition-colors">
-                Email me directly instead
+                Open email draft
               </a>
             )}
           </form>

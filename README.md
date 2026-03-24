@@ -95,12 +95,13 @@ If you want the contact form to actually send mail, create a `.env` file using `
 
 ```bash
 RESEND_API_KEY=re_your_resend_api_key
-RESEND_FROM_EMAIL="Portfolio Contact <onboarding@resend.dev>"
+RESEND_FROM_EMAIL="Portfolio Contact <contact@yourdomain.com>"
 ```
 
 Notes:
 
-- `RESEND_FROM_EMAIL` should be a verified sender in Resend for production use.
+- `RESEND_FROM_EMAIL` is required and should be a verified sender from your Resend account.
+- Do not rely on `onboarding@resend.dev` for deployment; use your own verified domain/sender.
 - portfolio messages are sent to `vvictort20@gmail.com`
 - the contact API also applies rate limiting at 2 submissions per 24 hours per user/IP
 
