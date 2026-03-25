@@ -1,5 +1,5 @@
 import React from "react";
-import { Plane, FolderGit2, ExternalLink } from "lucide-react";
+import { FolderGit2, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "../../utils";
 
@@ -24,11 +24,11 @@ interface Props {
 export function DestinationsSection({ projects }: Props) {
   const containerVars = {
     hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { staggerChildren: 0.15 } },
+    show: { opacity: 1, transition: { staggerChildren: 0.08 } },
   };
   const itemVars = {
-    hidden: { opacity: 0, scale: 0.95, y: 20 },
-    show: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.5 } },
+    hidden: { opacity: 0, y: 16 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.35 } },
   };
 
   return (
@@ -61,7 +61,7 @@ export function DestinationsSection({ projects }: Props) {
           <motion.div
             variants={itemVars}
             key={i}
-            className="group relative bg-[#050505]/80 backdrop-blur-xl border border-white/10 rounded-3xl hover:border-primary/30 transition-[border-color,box-shadow] duration-500 hover:shadow-[0_0_30px_rgba(250,204,21,0.1)] flex flex-col overflow-hidden h-full transform-gpu backface-hidden will-change-[transform,opacity]">
+            className="group relative bg-[#050505] border border-white/10 rounded-3xl hover:border-primary/30 transition-[border-color,box-shadow] duration-500 hover:shadow-[0_0_24px_rgba(250,204,21,0.08)] flex flex-col overflow-hidden h-full transform-gpu backface-hidden">
             <div
               className="absolute inset-0 opacity-10 pointer-events-none"
               style={{

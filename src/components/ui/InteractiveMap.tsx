@@ -62,12 +62,8 @@ export function InteractiveMap() {
   const [activeNodeIndex, setActiveNodeIndex] = useState(0);
   const activeNode = nodes[activeNodeIndex];
 
-  // Calculate percentage along the total path for the plane
-  // This is a simplified approach for the UI state
-  const offsetPercentage = (activeNodeIndex / (nodes.length - 1)) * 100;
-
   return (
-    <div className="w-full flex flex-col md:flex-row gap-8 bg-[#050505]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-6 relative overflow-hidden shadow-2xl group transform-gpu backface-hidden">
+    <div className="w-full flex flex-col md:flex-row gap-8 bg-[#050505] border border-white/10 rounded-3xl p-6 relative overflow-hidden shadow-xl group transform-gpu backface-hidden">
       {/* Background Decor */}
       <div
         className="absolute inset-0 opacity-20 pointer-events-none"
@@ -195,11 +191,11 @@ export function InteractiveMap() {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeNodeIndex}
-            initial={{ opacity: 0, x: 20, filter: "blur(8px)" }}
-            animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-            exit={{ opacity: 0, x: -20, filter: "blur(8px)" }}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.4 }}
-            className="flex flex-col h-full bg-white/2 border border-white/10 p-6 rounded-2xl backdrop-blur-xl">
+            className="flex flex-col h-full bg-black/55 border border-white/10 p-6 rounded-2xl">
             <div className="flex justify-between items-center mb-6">
               <div className="flex flex-col">
                 <span className="text-[9px] font-mono text-zinc-500 tracking-[0.3em] uppercase mb-1">NAV LOG</span>
@@ -224,7 +220,7 @@ export function InteractiveMap() {
               <div className="flex-1 flex flex-col items-center">
                 <div className="w-full h-px bg-zinc-800 relative">
                   <motion.div
-                    className="absolute inset-y-0 left-0 bg-primary/40 w-1/4 blur-[1px]"
+                    className="absolute inset-y-0 left-0 bg-primary/40 w-1/4"
                     animate={{ x: ["0%", "400%"] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                   />

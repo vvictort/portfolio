@@ -75,7 +75,7 @@ export function ArrivalsSection() {
         ))}
       </motion.div>
 
-      <div className="mt-24 md:mt-32 pt-8 pb-8 flex flex-col md:flex-row items-center justify-between border-t border-white/5 text-zinc-600 font-mono text-[10px] uppercase tracking-widest px-4 gap-4 text-center md:text-left">
+      <div className="mt-24 md:mt-32 pt-8 pb-8 flex flex-col md:flex-row items-center justify-between border-t border-white/5 text-zinc-600 font-mono text-[10px] uppercase tracking-widest px-4 gap-4 text-center md:text-left opacity-40 grayscale group hover:grayscale-0 hover:opacity-100 transition-all duration-700">
         <div className="flex items-center gap-2">
           <Plane className="w-4 h-4" /> VICTOR THAI
         </div>

@@ -32,32 +32,32 @@ const projects = [...projectsData].sort((a, b) => new Date(b.date).getTime() - n
 
 		{/* A1: About Section */}
 		<section id="about" class="w-full relative">
-			<AboutSection client:idle />
+			<AboutSection client:load />
 		</section>
 
         {/* B2: Journey Section */}
 		<section id="journey" class="w-full relative">
-			<JourneySection client:idle />
+			<JourneySection client:load />
 		</section>
 
         {/* C3: Destinations Section */}
 		<section id="destinations" class="w-full relative">
-			<DestinationsSection client:idle projects={projects} />
+			<DestinationsSection client:load projects={projects} />
 		</section>
 
         {/* D4: Beyond Code Section */}
 		<section id="beyond-code" class="w-full relative">
-			<BeyondCodeSection client:idle />
+			<BeyondCodeSection client:load />
 		</section>
 
         {/* E5: Contact Section */}
 		<section id="contact" class="w-full relative">
-			<ContactSection client:idle />
+			<ContactSection client:load />
 		</section>
 
         {/* F6: Arrivals Section */}
 		<section id="arrivals" class="w-full relative">
-			<ArrivalsSection client:idle />
+			<ArrivalsSection client:load />
 		</section>
 		</main>
 </MainLayout>

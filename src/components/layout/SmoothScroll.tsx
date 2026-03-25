@@ -6,13 +6,13 @@ const MOBILE_MENU_TOGGLE_EVENT = "portfolio:mobile-menu-toggle";
 export function SmoothScroll() {
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.0,
+      duration: 0.6,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      wheelMultiplier: 1.15,
-      touchMultiplier: 1.7,
+      wheelMultiplier: 1,
+      touchMultiplier: 1.2,
     });
     let rafId = 0;
 

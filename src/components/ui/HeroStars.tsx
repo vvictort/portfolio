@@ -45,7 +45,7 @@ function createStar(width: number, height: number): Star {
     twinkleSpeed: 0.5 + Math.random() * 1.8,
     twinkleOffset: Math.random() * Math.PI * 2,
     glowSize: 3 + Math.random() * 10,
-    sparkle: Math.random() > 0.84,
+    sparkle: Math.random() > 0.9,
     color: STAR_TONES[Math.floor(Math.random() * STAR_TONES.length)],
   };
 }
@@ -114,7 +114,7 @@ export function HeroStars() {
     };
 
     const setCanvasSize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       width = canvas.clientWidth;
       height = canvas.clientHeight;
 
@@ -122,7 +122,7 @@ export function HeroStars() {
       canvas.height = Math.floor(height * dpr);
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      const targetCount = Math.max(90, Math.min(220, Math.round((width * height) / 7000)));
+      const targetCount = Math.max(80, Math.min(180, Math.round((width * height) / 8200)));
       stars.length = 0;
       meteors.length = 0;
 
@@ -131,7 +131,7 @@ export function HeroStars() {
       }
 
       if (!prefersReducedMotion) {
-        for (let i = 0; i < 3; i += 1) {
+        for (let i = 0; i < 2; i += 1) {
           meteors.push(createMeteor(width, height, i * 3600));
         }
       }
@@ -145,7 +145,7 @@ export function HeroStars() {
         star.baseAlpha + (Math.sin(time * 0.001 * star.twinkleSpeed + star.twinkleOffset) + 1) * 0.16;
       const clampedAlpha = Math.min(twinkle, 0.95);
 
-      if (star.size > 1.1) {
+      if (star.size > 1.4) {
         const glowRadius = star.glowSize;
         const glow = context.createRadialGradient(star.x, star.y, 0, star.x, star.y, glowRadius);
         glow.addColorStop(0, `rgba(${red}, ${green}, ${blue}, ${clampedAlpha * 0.16})`);
